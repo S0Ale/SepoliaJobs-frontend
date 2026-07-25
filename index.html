@@ -1,24 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sepolia Dapp</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="./css/style.css">
+	<link rel="stylesheet" href="./css/home.css">
 
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
+	<script src="https://kit.fontawesome.com/6de3b8484d.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+	<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body x-data="dapp()" class="max-w-xl mx-auto mt-10 px-5 font-sans">
+<body x-data="connect()" class="max-w-xl mx-auto mt-10 px-5 font-sans">
+	<h1 class="text-2xl font-bold mb-4">Sepolia Dapp</h1>
+	<button @click="doConnect()" x-show="!open" class="px-4 py-2 bg-blue-600 text-white rounded-md">
+		Connect Wallet
+	</button>
+	<div x-show="open">
+		<p>Address: <span x-text="address"></span></p>
+		<p>Balance: <span x-text="balance"></span></p>
+		<p x-show="err" x-text="msg"></p>
+	</div>
 
-  <h1 class="text-2xl font-bold mb-4">Sepolia Dapp</h1>
-  <p x-html="msg"></p>
-
-  <script>
-    function dapp() {
-		return {msg:"Ciao ciao"} 
-	}
-  </script>
-
+	<script src="./js/login.js"></script>
 </body>
 </html>
