@@ -1,0 +1,47 @@
+async function connect() {
+	if (!window.ethereum) {
+		let msg = "No wallet found. Install MetaMask.";
+		return {e: true, msg: msg}
+	}
+
+	try {
+		await window.ethereum.request({ method: "eth_requestAccounts" });
+		console.log("ciao")
+		let account = await getData();
+		return account
+	} catch (e) {
+		let msg = e.message || "Connection failed.";
+		return {e: true, msg: msg}
+	}
+}
+
+async function getData(){
+	const provider = new ethers.BrowserProvider(window.ethereum);
+	const signer = await provider.getSigner();
+	let address = await signer.getAddress();
+	let balance = await provider.getBalance(address);
+	balance = `${ethers.formatEther(balance)} ETH`;
+
+	return {address: address, balance: balance}
+}
+
+async function loginGate(canGetData=true){
+	if (!window.ethereum) {
+		window.location.href = "/";
+		return false
+	}
+	console.log('ciao')
+
+	try{
+		console.log('ciao')
+		let list = await window.ethereum.request({ method: "eth_accounts" });
+		console.log('ciao')
+		console.log(list)
+		if(list.length > 0) return canGetData ? getData() : true
+		return false
+	} catch(e){
+		return false
+	}
+}
+
+export { loginGate, connect };

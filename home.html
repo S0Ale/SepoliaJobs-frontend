@@ -1,29 +1,20 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="./css/style.css">
+	<link rel="stylesheet" href="./css/home.css">
 
 	<script src="https://kit.fontawesome.com/6de3b8484d.js" crossorigin="anonymous"></script>
-	<!--
 	<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-	-->
 	<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
 	<script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="max-w-xl mx-auto mt-10 px-5 font-sans">
-	<main x-data="initLogin">
-		<div>
-			<button @click="connectF()" class="px-4 py-2 bg-blue-600 text-white rounded-md">
-				Connect Wallet
-			</button>
-			<p x-show="$store.login.showerror" x-html="$store.login.msg"></p>
-		</div>
-	</main>
+	Home
 
-
-	<script type="module" src="./js/connect-page.js"></script>
-	<script type="module" src="./js/alpine-init.js"></script>
+	<script src="./js/alpine.js"></script>
 </body>
 </html>
