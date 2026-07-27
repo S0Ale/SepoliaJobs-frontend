@@ -8,4 +8,9 @@ function getstore(store, property){
 	return (typeof property !== 'undefined') ? Alpine.store(store)[property] : Alpine.store(store)
 }
 
-export { getstore, setstore };
+function shortenAddress(address, chars = 4) {
+  if (!address) return '';
+  return `${address.slice(0, 2 + chars)}...${address.slice(-chars)}`;
+}
+
+export { getstore, setstore, shortenAddress };

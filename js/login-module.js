@@ -22,7 +22,7 @@ async function getData(){
 	let balance = await provider.getBalance(address);
 	balance = `${ethers.formatEther(balance)} ETH`;
 
-	return {address: address, balance: balance}
+	return { provider: provider, signer: signer, address: address, balance: balance }
 }
 
 async function loginGate(canGetData=true){

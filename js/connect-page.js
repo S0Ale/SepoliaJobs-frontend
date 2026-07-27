@@ -8,7 +8,6 @@ document.addEventListener('alpine:init', () => {
 	Alpine.data('initLogin', () => ({
 		connectF: async () => {
 			let res = await connect()
-			console.log(res)
 			if (res.e) {
 				setstore('login', true, 'showerror')
 				setstore('login', res.msg, 'msg')
