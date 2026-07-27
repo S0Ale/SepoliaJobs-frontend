@@ -38,3 +38,16 @@ h1, h2, h3{
 	background: transparent;
 }
 
+/* ------ */
+
+body{
+	background: var(--bgnd);
+	color: var(--text);
+}
+
+.margin{
+	background-color: var(--bgnd);
+	background-attachment: fixed;
+	background-size: 10px 10px;
+	background-image: repeating-linear-gradient(315deg,var(--pattern-fg) 0,var(--pattern-fg) 1px,transparent 0,transparent 50%);
+}

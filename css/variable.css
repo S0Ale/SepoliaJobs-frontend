@@ -2,6 +2,11 @@
     --family: sans-serif, 'Inter';
 
     --text-family: 'Inter', sans-serif;
+	--text: #404040;
 
-    --bgnd: #fafafa;
+    --bgnd: #fdfdfd;
+	--border: rgb(209 213 219);
+
+	/*--pattern-fg: color-mix(in oklab, var(--border), transparent);*/
+	--pattern-fg: var(--border);
 }
