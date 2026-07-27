@@ -30,13 +30,9 @@ async function loginGate(canGetData=true){
 		window.location.href = "/";
 		return false
 	}
-	console.log('ciao')
 
 	try{
-		console.log('ciao')
 		let list = await window.ethereum.request({ method: "eth_accounts" });
-		console.log('ciao')
-		console.log(list)
 		if(list.length > 0) return canGetData ? getData() : true
 		return false
 	} catch(e){
@@ -44,4 +40,9 @@ async function loginGate(canGetData=true){
 	}
 }
 
-export { loginGate, connect };
+function returnToLogin(){
+	const BASE_PATH = '/SepoliaFrontend/';
+	window.location.href = BASE_PATH
+}
+
+export { loginGate, connect, returnToLogin };
