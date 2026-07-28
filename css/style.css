@@ -14,6 +14,7 @@
 .col-11 {width: 91.66%;}
 .col-12 {width: 100%;}
 
+.layerneg{z-index: -1;}
 .layer0{z-index: 0;}
 .layer1{z-index: 1;}
 .layer2{z-index: 2;}
@@ -50,4 +51,19 @@ body{
 	background-attachment: fixed;
 	background-size: 10px 10px;
 	background-image: repeating-linear-gradient(315deg,var(--pattern-fg) 0,var(--pattern-fg) 1px,transparent 0,transparent 50%);
+}
+
+.sector{
+	border-bottom: 1px solid var(--border);
+	border-top: 1px solid var(--border);
+}
+
+.std-button{
+	color: white;
+	background: var(--main);
+	border: 1px solid var(--border);
+	transition: background-color 0.25s
+}
+.std-button:hover{
+	background: var(--main-light);
 }

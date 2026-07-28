@@ -1,0 +1,25 @@
+input#search{
+	outline: 0 
+}
+
+svg.search path{
+	--color: oklch(70.7% 0.022 261.325);
+	fill: var(--color);
+	stroke: var(--color);
+	transition: all .25s
+}
+
+.search-cont:has(#search:focus) svg path{
+	--color: var(--main); 
+}
+
+svg.return{
+	--color: oklch(70.7% 0.022 261.325);
+	color: var(--color);
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity .25s;
+}
+.search-cont:has(#search:focus) svg.return{
+	opacity: 1;
+}
