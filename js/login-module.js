@@ -42,7 +42,7 @@ async function loginGate(canGetData=true){
 }
 
 function returnToLogin(){
-	const BASE_PATH = '/SepoliaFrontend/';
+	const BASE_PATH = '/';
 	window.location.href = BASE_PATH
 }
 
