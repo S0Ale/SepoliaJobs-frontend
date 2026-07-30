@@ -39,6 +39,15 @@ h1, h2, h3{
 	background: transparent;
 }
 
+.noselect{
+	-webkit-touch-callout: none; /* iOS Safari */
+	-webkit-user-select: none; /* Safari */
+	-khtml-user-select: none; /* Konqueror HTML */
+	-moz-user-select: none; /* Old versions of Firefox */
+	-ms-user-select: none; /* Internet Explorer/Edge */
+	user-select: none;
+}
+
 /* ------ */
 
 body{
@@ -58,6 +67,13 @@ body{
 	border-top: 1px solid var(--border);
 }
 
+.seg-title{
+	transition: all .25s;
+}
+.segment:hover .seg-title{
+	color: var(--main)
+}
+
 .std-button{
 	color: white;
 	background: var(--main);
@@ -66,4 +82,16 @@ body{
 }
 .std-button:hover{
 	background: var(--main-light);
+}
+
+.job-card{
+	background: var(--bgnd);
+	border: 1px solid var(--border);
+}
+.job-card h3{
+	color: oklch(70.7% 0.022 261.325);
+	transition: color .25s;
+}
+.job-card:hover h3{
+	color: var(--text)
 }

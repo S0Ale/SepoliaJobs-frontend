@@ -6,7 +6,6 @@ async function connect() {
 
 	try {
 		await window.ethereum.request({ method: "eth_requestAccounts" });
-		console.log("ciao")
 		let account = await getData();
 		return account
 	} catch (e) {
@@ -16,7 +15,9 @@ async function connect() {
 }
 
 async function getData(){
-	const provider = new ethers.BrowserProvider(window.ethereum);
+	//const provider = new ethers.BrowserProvider(window.ethereum);
+	let url = 'http://127.0.0.1:8545/'
+	const provider = new ethers.JsonRpcProvider(url)
 	const signer = await provider.getSigner();
 	let address = await signer.getAddress();
 	let balance = await provider.getBalance(address);
