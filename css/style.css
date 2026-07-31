@@ -95,3 +95,6 @@ body{
 .job-card:hover h3{
 	color: var(--text)
 }
+.job-card:hover div h3+span{
+	color: var(--main)
+}

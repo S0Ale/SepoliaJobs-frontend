@@ -10,10 +10,9 @@ document.addEventListener('alpine:init', () => {
 	Alpine.store('jobs', [])
 
 	Alpine.data('jobtemplate', () => ({
-		formatDate: (timestamp) => {
-			return (new Date(Number(timestamp)*1000)).toDateString()
-		},
-		getJobType: (job) => { return getType(user.address, job) }
+		formatDate: (timestamp) => { return (new Date(Number(timestamp)*1000)).toDateString() },
+		getJobType: (job) => { return getType(user.address, job) },
+		redirectJob: (job) => { window.location.href = `/job.html?id=${job.id}`;return; },
 	}))
 
 	Alpine.data('account', () => ({
@@ -31,6 +30,7 @@ document.addEventListener('alpine:init', () => {
 			this.formattedAddr = shortenAddress(user.address)
 
 			jobs = await getJobs(user.provider, 10)
+			console.log(jobs)
 			let userJobs = jobs.filter((job) => getType(user.address, job) !== null)
 			jobs = jobs.filter((job) => !userJobs.some(job => job.id === jobs[0].id))
 			Alpine.store('jobs', jobs)

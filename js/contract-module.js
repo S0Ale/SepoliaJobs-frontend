@@ -1,4 +1,5 @@
 import contractJson from "./FreelancePlatform.json" with { type: "json" }
+import config from "../res/contract-address.json" with { type: "json" }
 
 const abi = contractJson.abi
 let contract = null
@@ -6,8 +7,7 @@ let signer = null
 const MAX_JOBS = 100
 
 function setup(provider, signer){
-	let address = '0x5fbdb2315678afecb367f032d93f642f64180aa3'
-	contract = new ethers.Contract(address, abi, provider)
+	contract = new ethers.Contract(config.address, abi, provider)
 	signer = signer
 }
 
@@ -24,6 +24,7 @@ async function getJobs(provider, lasts){
 	const res = []
 	for(const e of events.slice(-limit)){
 		let j = e.args.job.toObject()
+		j.id = Number(e.args.jobID)
 		res.push(j)
 	}
 
