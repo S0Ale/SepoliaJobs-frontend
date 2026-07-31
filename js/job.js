@@ -31,12 +31,12 @@ document.addEventListener('alpine:init', () => {
 			//job.title = res.title
 			//job.client = res.client
 			//job.freelancer = res.freelancer
-			console.log(res)
 
 			Alpine.store('jobdata', {
 				title: res.title,
 				client: res.client,
 				freelancer: res.freelancer,
+				desc: res.desc
 			})
 		}
 	}))

@@ -1,3 +1,7 @@
+main{
+	height: calc(100vh - 128px - 64px)
+}
+
 input#search{
 	outline: 0 
 }
