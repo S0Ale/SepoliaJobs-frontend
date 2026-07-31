@@ -12,7 +12,7 @@ function setup(provider, signer){
 }
 
 async function getJob(id){
-	return await contract.jobs(id).toObject()
+	return (await contract.jobs(id)).toObject()
 }
 
 // lasts: n more recent jobs, negative for the entire job list

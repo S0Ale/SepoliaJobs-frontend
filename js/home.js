@@ -30,7 +30,6 @@ document.addEventListener('alpine:init', () => {
 			this.formattedAddr = shortenAddress(user.address)
 
 			jobs = await getJobs(user.provider, 10)
-			console.log(jobs)
 			let userJobs = jobs.filter((job) => getType(user.address, job) !== null)
 			jobs = jobs.filter((job) => !userJobs.some(job => job.id === jobs[0].id))
 			Alpine.store('jobs', jobs)
@@ -38,4 +37,3 @@ document.addEventListener('alpine:init', () => {
 		}
 	}))
 })
-//setTimeout(() => { console.log('fatto');Alpine.store('jobs', [{title: 'blabla'}]); }, 2000);
