@@ -41,6 +41,19 @@ async function loginGate(canGetData=true){
 	}
 }
 
+async function logout() {
+    try {
+        await signer.provider.send('wallet_requestPermissions', [
+            {
+                eth_accounts: {}
+            }
+        ])
+        returnToLogin()
+    } catch (e) {
+        return //TODO: what to do?
+    }
+}
+
 function returnToLogin(){
 	const BASE_PATH = '/';
 	window.location.href = BASE_PATH
