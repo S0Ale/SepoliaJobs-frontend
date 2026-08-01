@@ -40,6 +40,7 @@ document.addEventListener('alpine:init', () => {
 	Alpine.data('newjobmodal', () => ({
 		openmodal: false,
 
-		submitJob: () => {}
+		submitJob: () => {
+		}
 	}))
 })

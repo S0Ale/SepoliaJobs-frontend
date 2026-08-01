@@ -11,6 +11,8 @@ function setup(provider, signer){
 	signer = signer
 }
 
+async function createJob(address){}
+
 async function getJob(id){
 	return (await contract.jobs(id)).toObject()
 }
@@ -31,4 +33,4 @@ async function getJobs(provider, lasts){
 	return res
 }
 
-export { setup, getJob, getJobs }
+export { setup, getJob, getJobs, createJob }
