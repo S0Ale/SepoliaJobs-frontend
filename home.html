@@ -10,7 +10,43 @@
 	<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
 	<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="w-full font-sans">
+<body x-data="newjobmodal" class="relative w-full font-sans layer0">
+
+	<div x-show="openmodal" class="px-4 flex flex-col justify-center bg-gray-950/30 job-modal absolute top-0 left-0 w-full h-full layer2000">
+		<div class="relative bg-white w-full md:w-[425px] h-[450px] sm:mx-auto border border-gray-300">
+			<button @click="openmodal = false" class="absolute right-0 top-0 p-2 text-gray-400 hover:text-red-500 transition-[color] duration-250">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+				</svg>
+			</button>
+
+			<h2 class="mt-10 px-3 py-2 border-t border-gray-300 text-xl">Create new Job</h2>
+
+			<div class="mt-6 px-3">
+				<p class="text-gray-400">Title</p>
+				<input type="text" name="title" placeholder="Job title" class="w-full px-2 py-1 border border-gray-300 bg-gray-50">
+			</div>
+			<div class="mt-6 px-3">
+				<p class="text-gray-400">Description</p>
+				<input type="text" name="desc" placeholder="Job description" class="w-full px-2 py-1 border border-gray-300 bg-gray-50">
+			</div>
+			<div x-data="deadlinePicker" class="mt-6 px-3 flex flex-col">
+				<label for="deadline" class="text-gray-400">Deadline</label>
+				<input
+				type="datetime-local"
+				id="deadline"
+				x-model="localValue"
+				:min="minDateTime"
+				class="border border-gray-300 rounded px-3 py-2 text-gray-400 bg-gray-50"
+				/>
+				<span class="text-xs text-gray-500" x-show="localValue">
+					Unix timestamp: <span x-text="unixTimestamp"></span>
+				</span>
+			</div>
+
+			<button @click="" class="std-button absolute bottom-4 right-4 px-3 py-2">Create job</button>
+		</div>
+	</div>
 	<nav class="top-0 fixed w-full h-16 px-6 md:px-24 flex row justify-between border-b border-gray-300 bg-white layer1000">
 		<header class="relative flex items-center text-xl font-bold">
 			<a href="/home.html" class="absolute w-full h-full top-0 left-0"></a>
@@ -22,7 +58,6 @@
 		</div>
 	</nav>
 	<main class="relative mt-16 layer-1 grid grid-cols-[0_1fr_0] sm:grid-cols-[4rem_1fr_4rem] md:grid-cols-[12rem_1fr_12rem] lg:grid-cols-[16rem_1fr_16rem] 2xl:grid-cols-[20rem_1fr_20rem] grid-rows-[1fr] gap-0">
-
 		<div class="margin"></div>
 		<div class="flex flex-col border border-y-0 border-gray-300">
 			<section class="sector mt-32">
@@ -47,7 +82,15 @@
 			</section>
 
 			<section class="segment relative sector mt-12 p-3 grid grid-cols-2 gap-3 bg-[#f7f7f7]">
-				<span class="seg-title absolute px-2 bottom-[100%] text-md text-gray-400 noselect">Your jobs</span>
+				<div class="flex flex-row justify-between absolute pl-2 w-full bottom-[100%]">
+					<span class="seg-title text-md text-gray-400 noselect">Your jobs</span>
+
+					<button class="px-2 text-gray-400 hover:text-blue-600 transition-[color] duration-250" @click="openmodal = true">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+						</svg>
+					</button>
+				</div>
 
 				<template x-data="jobtemplate" x-for="job in $store.userjobs">
 					<div x-data="{deadline: formatDate(job.deadline), type: getJobType(job)}" @click="redirectJob(job)" class="job-card relative flex flex-row justify-between p-3 cursor-pointer">

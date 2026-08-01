@@ -36,4 +36,10 @@ document.addEventListener('alpine:init', () => {
 			Alpine.store('userjobs', userJobs)
 		}
 	}))
+
+	Alpine.data('newjobmodal', () => ({
+		openmodal: false,
+
+		submitJob: () => {}
+	}))
 })
