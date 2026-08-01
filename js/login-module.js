@@ -15,9 +15,7 @@ async function connect() {
 }
 
 async function getData(){
-	//const provider = new ethers.BrowserProvider(window.ethereum);
-	let url = 'http://127.0.0.1:8545/'
-	const provider = new ethers.JsonRpcProvider(url)
+	const provider = new ethers.BrowserProvider(window.ethereum);
 	const signer = await provider.getSigner();
 	let address = await signer.getAddress();
 	let balance = await provider.getBalance(address);
@@ -39,19 +37,6 @@ async function loginGate(canGetData=true){
 	} catch(e){
 		return false
 	}
-}
-
-async function logout() {
-    try {
-        await signer.provider.send('wallet_requestPermissions', [
-            {
-                eth_accounts: {}
-            }
-        ])
-        returnToLogin()
-    } catch (e) {
-        return //TODO: what to do?
-    }
 }
 
 function returnToLogin(){

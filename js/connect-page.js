@@ -21,5 +21,5 @@ let user = await loginGate(false)
 if(user){
 	// redirect to main page
 	window.location.href = './home.html'
-} 
+}
 
