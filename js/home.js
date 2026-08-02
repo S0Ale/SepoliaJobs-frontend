@@ -1,10 +1,22 @@
 import Alpine from 'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/module.esm.js'
 import { loginGate, returnToLogin } from './login-module.js'
 import { getstore, setstore, shortenAddress, getType } from './util.js'
-import { setup, getJobs } from './contract-module.js'
+import { setup, getJobs, createJob } from './contract-module.js'
 
 let user = {address: '', balance: ''}
 let jobs = []
+let userJobs = []
+
+async function listJobs(alljobs=true, userjobs=false){
+	if(alljobs) jobs = await getJobs(user.provider, 10)
+	if(userjobs){
+		userJobs = jobs.filter((job) => getType(user.address, job) !== null)
+	}
+	jobs = jobs.filter((job) => !userJobs.some(userjob => userjob.id === job.id))
+
+	if(alljobs) Alpine.store('jobs', jobs)
+	if(userjobs) Alpine.store('userjobs', userJobs)
+}
 
 document.addEventListener('alpine:init', () => {
 	Alpine.store('jobs', [])
@@ -29,18 +41,36 @@ document.addEventListener('alpine:init', () => {
 			this.balance = user.balance
 			this.formattedAddr = shortenAddress(user.address)
 
-			jobs = await getJobs(user.provider, 10)
-			let userJobs = jobs.filter((job) => getType(user.address, job) !== null)
-			jobs = jobs.filter((job) => !userJobs.some(job => job.id === jobs[0].id))
-			Alpine.store('jobs', jobs)
-			Alpine.store('userjobs', userJobs)
+			await listJobs(true, true)
 		}
 	}))
 
 	Alpine.data('newjobmodal', () => ({
 		openmodal: false,
+		modalerror: false,
+		errormsg: '',
 
-		submitJob: () => {
+		async submitJob(){
+			let form = document.querySelector("#create-job")
+			let data = new FormData(form)
+			let date = data.get('deadline')
+			data.delete('deadline')
+			data.append('deadline', Math.floor(new Date(date).getTime() / 1000))
+			
+			try{
+				let tx = await createJob(user.address, data)
+				const receipt = await tx.wait()
+				console.log(receipt)
+				this.openmodal = false
+				await listJobs(true, true)
+			}catch(e){
+				console.error(e)
+				this.modalerror = true
+				this.errormsg = e.reason ||
+					e.shortMessage ||                    // ethers' own short summary
+					e.info?.error?.message ||            // sometimes nested here for provider errors
+					e.data?.message || 'Transaction failed'
+			}
 		}
 	}))
 })

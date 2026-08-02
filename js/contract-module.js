@@ -3,15 +3,21 @@ import config from "../res/contract-address.json" with { type: "json" }
 
 const abi = contractJson.abi
 let contract = null
+let signedContract = null
 let signer = null
 const MAX_JOBS = 100
 
 function setup(provider, signer){
 	contract = new ethers.Contract(config.address, abi, provider)
-	signer = signer
+	signedContract = new ethers.Contract(config.address, abi, signer)
 }
 
-async function createJob(address){}
+async function createJob(address, formData){
+	const paymentWei = ethers.parseEther(formData.get('payment'))
+	return await signedContract.createJob(formData.get('title'), formData.get('desc'), Number(formData.get('deadline')), {
+		value: paymentWei
+	})
+}
 
 async function getJob(id){
 	return (await contract.jobs(id)).toObject()
