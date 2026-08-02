@@ -1,3 +1,35 @@
 main{
 	height: calc(100vh - 128px - 64px)
 }
+
+.job-open {
+    background-color: oklch(72.3% 0.219 149.579 / .2);
+    border-color: oklch(72.3% 0.219 149.579);
+    color: oklch(72.3% 0.219 149.579);
+}
+
+.job-settled {
+    background-color: oklch(63.7% 0.237 25.331 / .2);
+    border-color: oklch(63.7% 0.237 25.331);
+    color: oklch(63.7% 0.237 25.331);
+}
+
+.job-completed {
+    background-color: oklch(58.5% 0.233 277.117 / .2);
+    border-color: oklch(58.5% 0.233 277.117);
+    color: oklch(58.5% 0.233 277.117);
+}
+
+.job-disputed {
+    background-color: oklch(76.9% 0.188 70.08 / .2);
+    border-color: oklch(76.9% 0.188 70.08);
+    color: oklch(76.9% 0.188 70.08);
+}
+
+.job-pending {
+    background-color: oklch(68.5% 0.169 237.323 / .2);
+    border-color: oklch(68.5% 0.169 237.323);
+    color: oklch(68.5% 0.169 237.323);
+}
+
+

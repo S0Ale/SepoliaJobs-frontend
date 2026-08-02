@@ -1,6 +1,6 @@
 import Alpine from 'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/module.esm.js'
 import { loginGate, returnToLogin } from './login-module.js'
-import { shortenAddress } from './util.js'
+import { shortenAddress, toState, stateToClass } from './util.js'
 import { setup, getJob } from './contract-module.js'
 
 let user = {address: '', balance: ''}
@@ -8,6 +8,11 @@ let job = {title: '', client: '', freelancer: ''}
 
 const params = new Proxy(new URLSearchParams(window.location.search), {
 	get: (searchParams, prop) => searchParams.get(prop),
+});
+
+const dateFormatter = new Intl.DateTimeFormat(navigator.language, {
+    dateStyle: "medium",
+    timeStyle: "short",
 });
 
 document.addEventListener('alpine:init', () => {
@@ -28,15 +33,16 @@ document.addEventListener('alpine:init', () => {
 			let id = Number(params.id)
 
 			let res = await getJob(id)
-			//job.title = res.title
-			//job.client = res.client
-			//job.freelancer = res.freelancer
 
 			Alpine.store('jobdata', {
 				title: res.title,
 				client: res.client,
 				freelancer: res.freelancer,
-				desc: res.desc
+				desc: res.desc,
+                state: res.state,
+                payment: ethers.formatUnits(res.payment, "ether"),
+                deadline: dateFormatter.format(new Date(Number(res.deadline) * 1000)),
+                stateClass: stateToClass(res.state)
 			})
 		}
 	}))

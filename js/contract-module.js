@@ -1,5 +1,6 @@
 import contractJson from "./FreelancePlatform.json" with { type: "json" }
 import config from "../res/contract-address.json" with { type: "json" }
+import { toState } from "./util.js"
 
 const abi = contractJson.abi
 let contract = null
@@ -20,7 +21,9 @@ async function createJob(address, formData){
 }
 
 async function getJob(id){
-	return (await contract.jobs(id)).toObject()
+	let j = (await contract.jobs(id)).toObject()
+    j.state = toState(j.state)
+    return j
 }
 
 // lasts: n more recent jobs, negative for the entire job list
@@ -33,6 +36,7 @@ async function getJobs(provider, lasts){
 	for(const e of events.slice(-limit)){
 		let j = e.args.job.toObject()
 		j.id = Number(e.args.jobID)
+        j.state = toState(j.state)
 		res.push(j)
 	}
 

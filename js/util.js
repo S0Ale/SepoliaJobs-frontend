@@ -5,6 +5,23 @@ const AddressType = {
 	FREELANCE: 'freelance'
 }
 
+const StateEnum = [
+    'Open',
+    'Assigned',
+    'Submitted',
+    'Disputed',
+    'Completed',
+    'Settled'
+]
+const StateToClass = {
+    'Open': 'job-open',
+    'Assigned': 'job-pending',
+    'Submitted': 'job-pending',
+    'Disputed': 'job-disputed',
+    'Completed': 'job-completed',
+    'Settled': 'job-settled'
+}
+
 function setstore(store, v, property){
 	Alpine.store(store)[property] = v
 }
@@ -24,4 +41,12 @@ function getType(address, job){
 	return null
 }
 
-export { getstore, setstore, shortenAddress, getType };
+function toState(intState) {
+    return StateEnum[Number(intState)]
+}
+
+function stateToClass(state) {
+    return StateToClass[state]
+}
+
+export { getstore, setstore, shortenAddress, getType, toState, stateToClass };
