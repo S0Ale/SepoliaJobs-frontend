@@ -67,8 +67,8 @@ document.addEventListener('alpine:init', () => {
 				console.error(e)
 				this.modalerror = true
 				this.errormsg = e.reason ||
-					e.shortMessage ||                    // ethers' own short summary
-					e.info?.error?.message ||            // sometimes nested here for provider errors
+					e.shortMessage ||                    // short summary
+					e.info?.error?.message ||            // provider errors
 					e.data?.message || 'Transaction failed'
 			}
 		}
