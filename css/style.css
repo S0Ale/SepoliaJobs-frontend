@@ -84,6 +84,16 @@ body{
 	background: var(--main-light);
 }
 
+.danger-button{
+	color: white;
+	background: var(--danger-bg);
+	border: 1px solid var(--border);
+	transition: background-color 0.25s
+}
+.danger-button:hover{
+	background: var(--danger-bg-light);
+}
+
 .job-card{
 	background: var(--bgnd);
 	border: 1px solid var(--border);

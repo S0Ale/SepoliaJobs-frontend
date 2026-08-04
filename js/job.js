@@ -1,6 +1,6 @@
 import Alpine from 'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/module.esm.js'
 import { loginGate, returnToLogin } from './login-module.js'
-import { shortenAddress, toState, stateToClass } from './util.js'
+import { shortenAddress, toState, stateToClass, JobState } from './util.js'
 import { setup, getJob } from './contract-module.js'
 
 let user = {address: '', balance: ''}
@@ -21,6 +21,10 @@ document.addEventListener('alpine:init', () => {
 	Alpine.data('account', () => ({
 		formattedAddr: shortenAddress(user.address),
 
+        isClient: false,
+        isAssignable: false,
+        isSubmittable: false,
+
 		async init(){
 			user = await loginGate(true)
 			if (!user) {
@@ -33,6 +37,10 @@ document.addEventListener('alpine:init', () => {
 			let id = Number(params.id)
 
 			let res = await getJob(id)
+
+            this.isClient = user.address == res.client
+            this.isAssignable = user.address != res.client && res.state == JobState.Open
+            this.isSubmittable = user.address == res.freelancer && res.state == JobState.Assigned
 
 			Alpine.store('jobdata', {
 				title: res.title,

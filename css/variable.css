@@ -7,8 +7,11 @@
     --bgnd: #fdfdfd;
 	--border: rgb(209 213 219);
 
-	--main: oklch(54.6% 0.245 262.881); 
+	--main: oklch(54.6% 0.245 262.881);
 	--main-light: oklch(62.3% 0.214 259.815);
+
+    --danger-bg: oklch(63.7% 0.237 25.331);
+    --danger-bg-light: oklch(0.737 0.237 25.33);
 
 	--pattern-fg: var(--border);
 }

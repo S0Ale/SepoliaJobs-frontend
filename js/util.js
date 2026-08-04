@@ -5,14 +5,23 @@ const AddressType = {
 	FREELANCE: 'freelance'
 }
 
+const JobState = Object.freeze({
+    Open: 'Open',
+    Assigned: 'Assigned',
+    Submitted: 'Submitted',
+    Disputed: 'Disputed',
+    Completed: 'Completed',
+    Settled: 'Settled'
+});
 const StateEnum = [
-    'Open',
-    'Assigned',
-    'Submitted',
-    'Disputed',
-    'Completed',
-    'Settled'
+    JobState.Open,
+    JobState.Assigned,
+    JobState.Submitted,
+    JobState.Disputed,
+    JobState.Completed,
+    JobState.Settled
 ]
+
 const StateToClass = {
     'Open': 'job-open',
     'Assigned': 'job-pending',
@@ -49,4 +58,4 @@ function stateToClass(state) {
     return StateToClass[state]
 }
 
-export { getstore, setstore, shortenAddress, getType, toState, stateToClass };
+export { getstore, setstore, shortenAddress, getType, toState, stateToClass, JobState };

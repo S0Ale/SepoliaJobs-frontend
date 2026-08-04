@@ -9,9 +9,9 @@ main{
 }
 
 .job-settled {
-    background-color: oklch(63.7% 0.237 25.331 / .2);
-    border-color: oklch(63.7% 0.237 25.331);
-    color: oklch(63.7% 0.237 25.331);
+    background-color: var(--danger-bg);
+    border-color: var(--danger-fg);
+    color: var(--danger-fg);
 }
 
 .job-completed {

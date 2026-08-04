@@ -36,20 +36,25 @@
 			</section>
             <section class="segment flex flex-row relative sector mt-12 bg-[#f7f7f7]">
                 <span class="seg-title absolute px-2 bottom-[100%] text-md text-gray-400 noselect">Info</span>
-                <div class="mt-2 mr-10 w-fit">
+                <div class="mt-4 mr-10 w-fit">
                     <span class="px-2 text-md noselect"> Payment:</span>
-				    <p x-data x-text="$store.jobdata.payment + ' ETH'" class="px-2 py-4"></p>
+				    <p x-data x-text="$store.jobdata.payment + ' ETH'" class="ml-[1px] px-2 py-2"></p>
                 </div>
-                <div class="mt-2 mr-10 w-fit">
+                <div class="mt-4 mr-10 w-fit">
                     <span class="px-2 text-md noselect"> Deadline:</span>
-				    <p x-data x-text="$store.jobdata.deadline" class="px-2 py-4"></p>
+				    <p x-data x-text="$store.jobdata.deadline" class="px-2 py-2"></p>
                 </div>
-                <div class="mt-2 w-fit">
+                <div class="mt-4 w-fit">
                     <p class="px-2 text-md noselect"> Status:</p>
-                    <div x-data class="ml-2 mt-2 mb-3 text-center border-2" :class="$store.jobdata.stateClass">
+                    <div x-data class="ml-2 mt-2 mb-4 text-center border-2" :class="$store.jobdata.stateClass">
                         <p x-text="$store.jobdata.state" class="mx-auto px-2 py-2"></p>
                     </div>
                 </div>
+            </section>
+            <section x-data="account" class="segment flex flex-row-reverse mt-6 pr-2">
+                <button x-show="isAssignable" class="std-button h-fit mx-2 px-3 py-2">Apply</button>
+                <button x-show="isSubmittable" class="std-button h-fit mx-2 px-3 py-2">Submit</button>
+                <button x-show="isClient && isAssignable" class="danger-button h-fit mx-2 px-3 py-2">Delete</button>
             </section>
 		</div>
 
