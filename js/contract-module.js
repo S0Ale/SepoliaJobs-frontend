@@ -66,6 +66,7 @@ async function createJob(address, formData){
 async function getJob(id){
 	let j = (await contract.jobs(id)).toObject()
     j.state = toState(j.state)
+    j.id = id
     return j
 }
 
@@ -78,7 +79,7 @@ async function getJobs(provider, lasts){
 	const res = []
 	for(const e of events.slice(-limit)){
 		let j = e.args.job.toObject()
-		j.id = Number(e.args.jobID)
+		j.id = e.args.jobID
         j.state = toState(j.state)
 		res.push(j)
 	}
@@ -104,4 +105,17 @@ async function getEvents(whitelist, predicate){
 	return events
 }
 
-export { setup, getJob, getJobs, createJob, getEvents, EventType }
+async function applyToJob(jobID) {
+    await signedContract.applyToJob(jobID);
+}
+
+// TODO: find a way to implement sending file (or file ID), maybe with IPFS?
+async function submitWork(jobID) {
+    await signedContract.submitWork(jobID)
+}
+
+async function deleteJob(jobID) {
+    await signedContract.deleteJob(jobID)
+}
+
+export { setup, getJob, getJobs, createJob, applyToJob, submitWork, deleteJob, getEvents, EventType }

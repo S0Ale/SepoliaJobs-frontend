@@ -1,7 +1,7 @@
 import Alpine from 'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/module.esm.js'
 import { loginGate, returnToLogin } from './login-module.js'
 import { shortenAddress, toState, stateToClass, JobState } from './util.js'
-import { setup, getJob } from './contract-module.js'
+import { setup, getJob, applyToJob, submitWork, deleteJob } from './contract-module.js'
 
 let user = {address: '', balance: ''}
 let job = {title: '', client: '', freelancer: ''}
@@ -21,6 +21,30 @@ document.addEventListener('alpine:init', () => {
 	Alpine.data('account', () => ({
 		formattedAddr: shortenAddress(user.address),
 
+        apply: async () => {
+            try {
+                await applyToJob(job.id)
+            } catch(e) {
+                console.log(e)
+            }
+        },
+
+        submit: async () => {
+            try {
+                await submitWork(job.id)
+            } catch(e) {
+                console.log(e)
+            }
+        },
+
+        del: async () => {
+            try {
+                await deleteJob(job.id)
+            } catch(e) {
+                console.log(e)
+            }
+        },
+
         isClient: false,
         isAssignable: false,
         isSubmittable: false,
@@ -34,9 +58,10 @@ document.addEventListener('alpine:init', () => {
 			setup(user.provider, user.signer)
 			this.balance = user.balance
 			this.formattedAddr = shortenAddress(user.address)
-			let id = Number(params.id)
 
-			let res = await getJob(id)
+			let res = await getJob(BigInt(params.id))
+            job = res
+            console.log(job)
 
             this.isClient = user.address == res.client
             this.isAssignable = user.address != res.client && res.state == JobState.Open
