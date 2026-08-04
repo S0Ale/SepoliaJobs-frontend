@@ -8,6 +8,49 @@ let signedContract = null
 let signer = null
 const MAX_JOBS = 100
 
+const EventType = {
+	JobCreated: 'JobCreated',
+	FreelancerApplied: 'FreelancerApplied',
+	DisputeOpened: 'DisputeOpened',
+	DisputeComment: 'DisputeComment',
+	DisputeClosed: 'DisputeClosed'
+}
+
+const eHandlers = {}
+eHandlers[EventType.JobCreated] = async (event, type) => {
+	let obj = {type: type, timestamp: event.args.timestamp}
+	obj.job = event.args.job.toObject()
+	return obj
+}
+eHandlers[EventType.FreelancerApplied] = async (event, type) => {
+	let id = event.args.jobID
+	let obj = {type: type, timestamp: event.args.timestamp, freelancer: event.args.freelancer}
+	obj.job = await getJob(id)
+	obj.job.id = Number(id)
+	return obj
+}
+eHandlers[EventType.DisputeOpened] = async (event, type) => {
+	let id = event.args.jobID
+	let obj = {type: type, timestamp: event.args.timestamp, opener: event.args.opener}
+	obj.job = await getJob(id)
+	obj.job.id = Number(id)
+	return obj
+}
+eHandlers[EventType.DisputeClosed] = async (event, type) => {
+	let id = event.args.jobID
+	let obj = {type: type, timestamp: event.args.timestamp, isclient: event.args.isClient}
+	obj.job = await getJob(id)
+	obj.job.id = Number(id)
+	return obj
+}
+eHandlers[EventType.DisputeComment] = async (event, type) => {
+	let id = event.args.jobID
+	let obj = {type: type, timestamp: event.args.timestamp, author: event.args.author, comment: event.args.text}
+	obj.job = await getJob(id)
+	obj.job.id = Number(id)
+	return obj
+}
+
 function setup(provider, signer){
 	contract = new ethers.Contract(config.address, abi, provider)
 	signedContract = new ethers.Contract(config.address, abi, signer)
@@ -43,4 +86,22 @@ async function getJobs(provider, lasts){
 	return res
 }
 
-export { setup, getJob, getJobs, createJob }
+// get events and filter them using a list
+// list of objects: {job, type, timestamp}
+async function getEvents(whitelist, predicate){
+	let events = new Array()
+	for(let type of whitelist){
+		const filter = contract.filters[type]()
+		const list = await contract.queryFilter(filter, 0, "latest")
+		let l = []
+		for(let e of list){
+			let obj = await eHandlers[type](e, type)
+			if(predicate(obj.job)) l.push(obj)
+		}
+		events = events.concat(l)
+	}
+
+	return events
+}
+
+export { setup, getJob, getJobs, createJob, getEvents, EventType }

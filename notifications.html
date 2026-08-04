@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="./css/style.css">
+	<link rel="stylesheet" href="./css/notify.css">
+
+	<script src="https://kit.fontawesome.com/6de3b8484d.js" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+	<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="relative w-full font-sans layer0">
+	<nav class="top-0 fixed w-full h-16 px-6 md:px-24 flex row justify-between border-b border-gray-300 bg-white layer1000">
+		<header class="relative flex items-center text-xl font-bold">
+			<a href="/home.html" class="absolute w-full h-full top-0 left-0"></a>
+			Sepolia Jobs
+		</header>
+		<div x-data="account" class="flex items-center text-sm">
+			<span class="mr-2">Address:</span>
+			<span x-text="formattedAddr"></span>
+		</div>
+	</nav>
+	<main class="relative mt-16 layer-1 grid grid-cols-[0_1fr_0] sm:grid-cols-[4rem_1fr_4rem] md:grid-cols-[12rem_1fr_12rem] lg:grid-cols-[16rem_1fr_16rem] 2xl:grid-cols-[20rem_1fr_20rem] grid-rows-[1fr] gap-0">
+		<div class="margin"></div>
+		<div class="flex flex-col pb-4 border border-y-0 border-gray-300">
+			<section class="sector mt-24">
+				<div class="p-3">
+					<h2 class="text-3xl">Your notifications</h2>
+				</div>
+			</section>
+
+			<section class="segment relative sector mt-10">
+				<span class="seg-title absolute px-2 bottom-[100%] text-md text-gray-400 noselect">Notifications</span>
+				<template x-data="eventtemplate" x-for="(e, index) in $store.events">
+					<div x-data="{date: formatDate(e.timestamp)}" class="relative flex flex-col sm:flex-row p-3 justify-between border-b border-gray-300 last:border-b-0 text-gray-400 even:bg-[#f7f7f7]">
+						<div>
+							<p x-text="e.type" class="text-[#555555]"></p>
+							<div class="flex flex-row content-center">
+								<p class="mr-2">Job:</p>
+								<a x-bind:href="'/job.html?id='+(e.job.id)" x-text="e.job.title" class="inline-block max-w-64 text-blue-400 text-ellipsis truncate hover:underline"></a>
+							</div>
+						</div>
+						<p x-text="date" class="text-sm"></p>
+					</div>
+				</template>
+			</section>
+		</div>
+
+		<div class="margin"></div>
+	</main>
+	<footer class="h-32 border-t border-gray-300"></footer>
+
+	<script type="module" src="./js/init.js"></script>
+	<script type="module" src="./js/notify.js"></script>
+	<script type="module" src="./js/alpine-init.js"></script>
+</body>
+</html>

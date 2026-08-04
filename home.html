@@ -62,12 +62,17 @@
 		<div x-data="account" class="flex items-center text-sm">
 			<span class="mr-2">Address:</span>
 			<span x-text="formattedAddr"></span>
+			<a href="/notifications.html" class="ml-2 p-1">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 notification stroke-gray-400 hover:stroke-blue-600 transition-[stroke] duration-250">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" class=""/>
+				</svg>
+			</a>
 		</div>
 	</nav>
 	<main class="relative mt-16 layer-1 grid grid-cols-[0_1fr_0] sm:grid-cols-[4rem_1fr_4rem] md:grid-cols-[12rem_1fr_12rem] lg:grid-cols-[16rem_1fr_16rem] 2xl:grid-cols-[20rem_1fr_20rem] grid-rows-[1fr] gap-0">
 		<div class="margin"></div>
-		<div class="flex flex-col border border-y-0 border-gray-300">
-			<section class="sector mt-32">
+		<div class="flex flex-col pb-4 border border-y-0 border-gray-300">
+			<section class="sector mt-24">
 				<div class="p-3">
 					<h2 class="text-4xl">Job list</h2>
 				</div>
@@ -102,10 +107,10 @@
 				<template x-data="jobtemplate" x-for="job in $store.userjobs">
 					<div x-data="{deadline: formatDate(job.deadline), type: getJobType(job)}" @click="redirectJob(job)" class="job-card relative flex flex-row justify-between p-3 cursor-pointer">
 						<div class="flex flex-col">
-							<h3 x-text="job.title" class="noselect"></h3>
+							<h3 x-text="job.title" class="max-w-80 truncate noselect"></h3>
 							<span x-text="type" class="text-sm text-gray-400 transition-[color] duration-250"></span>
 						</div>
-						<span x-text="deadline" class="text-sm flex flex-col justify-center text-gray-400"></span>
+						<span x-text="deadline" class="pl-2 text-sm flex flex-col justify-center text-gray-400"></span>
 					</div>
 				</template>
 			</section>
@@ -116,9 +121,9 @@
 				<template x-data="jobtemplate" x-for="job in $store.jobs">
                     <div x-data="{deadline: formatDate(job.deadline)}" @click="redirectJob(job)" class="job-card relative flex flex-row justify-between p-3 cursor-pointer">
 						<div class="flex flex-col">
-							<h3 x-text="job.title" class="noselect"></h3>
+							<h3 x-text="job.title" class="max-w-80 truncate noselect"></h3>
 						</div>
-						<span x-text="deadline" class="text-sm flex flex-col justify-center text-gray-400"></span>
+						<span x-text="deadline" class="pl-2 text-sm flex flex-col justify-center text-gray-400"></span>
 					</div>
 				</template>
 			</section>
