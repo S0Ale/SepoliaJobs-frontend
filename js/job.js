@@ -23,7 +23,11 @@ document.addEventListener('alpine:init', () => {
 
         apply: async () => {
             try {
-                await applyToJob(job.id)
+                //TODO: implement the listening of the event of the application to make the button go away
+                let tx = await applyToJob(job.id)
+                const receipt = await tx.wait()
+				console.log(receipt)
+                window.location.href = './home.html'
             } catch(e) {
                 console.log(e)
             }
@@ -31,7 +35,10 @@ document.addEventListener('alpine:init', () => {
 
         submit: async () => {
             try {
-                await submitWork(job.id)
+                let tx = await submitWork(job.id)
+                const receipt = await tx.wait()
+				console.log(receipt)
+                window.location.href = './home.html'
             } catch(e) {
                 console.log(e)
             }
@@ -39,13 +46,16 @@ document.addEventListener('alpine:init', () => {
 
         del: async () => {
             try {
-                await deleteJob(job.id)
+                let tx = await deleteJob(job.id)
+                const receipt = await tx.wait()
+				console.log(receipt)
+                window.location.href = './home.html'
             } catch(e) {
                 console.log(e)
             }
         },
 
-        isClient: false,
+        isDeletable: false,
         isAssignable: false,
         isSubmittable: false,
 
@@ -55,6 +65,7 @@ document.addEventListener('alpine:init', () => {
 				returnToLogin()
 				return
 			}
+
 			setup(user.provider, user.signer)
 			this.balance = user.balance
 			this.formattedAddr = shortenAddress(user.address)
@@ -63,9 +74,11 @@ document.addEventListener('alpine:init', () => {
             job = res
             console.log(job)
 
-            this.isClient = user.address == res.client
+            this.isDeletable = user.address == res.client && res.state == JobState.Open
             this.isAssignable = user.address != res.client && res.state == JobState.Open
             this.isSubmittable = user.address == res.freelancer && res.state == JobState.Assigned
+            console.log(user.address)
+            console.log(res.client)
 
 			Alpine.store('jobdata', {
 				title: res.title,

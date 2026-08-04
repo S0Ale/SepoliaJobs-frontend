@@ -1,6 +1,6 @@
 import contractJson from "./FreelancePlatform.json" with { type: "json" }
 import config from "../res/contract-address.json" with { type: "json" }
-import { toState } from "./util.js"
+import { toState, JobState } from "./util.js"
 
 const abi = contractJson.abi
 let contract = null
@@ -18,36 +18,37 @@ const EventType = {
 
 const eHandlers = {}
 eHandlers[EventType.JobCreated] = async (event, type) => {
-	let obj = {type: type, timestamp: event.args.timestamp}
-	obj.job = event.args.job.toObject()
+	let obj = { type: type, timestamp: event.args.timestamp }
+	obj.job = await getJob(id)
+	obj.job.id = id
 	return obj
 }
 eHandlers[EventType.FreelancerApplied] = async (event, type) => {
 	let id = event.args.jobID
 	let obj = {type: type, timestamp: event.args.timestamp, freelancer: event.args.freelancer}
 	obj.job = await getJob(id)
-	obj.job.id = Number(id)
+	obj.job.id = id
 	return obj
 }
 eHandlers[EventType.DisputeOpened] = async (event, type) => {
 	let id = event.args.jobID
 	let obj = {type: type, timestamp: event.args.timestamp, opener: event.args.opener}
 	obj.job = await getJob(id)
-	obj.job.id = Number(id)
+	obj.job.id = id
 	return obj
 }
 eHandlers[EventType.DisputeClosed] = async (event, type) => {
 	let id = event.args.jobID
 	let obj = {type: type, timestamp: event.args.timestamp, isclient: event.args.isClient}
 	obj.job = await getJob(id)
-	obj.job.id = Number(id)
+	obj.job.id = id
 	return obj
 }
 eHandlers[EventType.DisputeComment] = async (event, type) => {
 	let id = event.args.jobID
 	let obj = {type: type, timestamp: event.args.timestamp, author: event.args.author, comment: event.args.text}
 	obj.job = await getJob(id)
-	obj.job.id = Number(id)
+	obj.job.id = id
 	return obj
 }
 
@@ -78,9 +79,13 @@ async function getJobs(provider, lasts){
 
 	const res = []
 	for(const e of events.slice(-limit)){
-		let j = e.args.job.toObject()
-		j.id = e.args.jobID
-        j.state = toState(j.state)
+		let id = e.args.jobID
+        let j = await getJob(id)
+
+        console.log(j)
+        if (j.state == JobState.Deleted)
+            continue
+
 		res.push(j)
 	}
 
@@ -106,16 +111,16 @@ async function getEvents(whitelist, predicate){
 }
 
 async function applyToJob(jobID) {
-    await signedContract.applyToJob(jobID);
+   return await signedContract.applyToJob(jobID);
 }
 
 // TODO: find a way to implement sending file (or file ID), maybe with IPFS?
 async function submitWork(jobID) {
-    await signedContract.submitWork(jobID)
+    return await signedContract.submitWork(jobID)
 }
 
 async function deleteJob(jobID) {
-    await signedContract.deleteJob(jobID)
+    return await signedContract.deleteJob(jobID)
 }
 
 export { setup, getJob, getJobs, createJob, applyToJob, submitWork, deleteJob, getEvents, EventType }

@@ -11,7 +11,8 @@ const JobState = Object.freeze({
     Submitted: 'Submitted',
     Disputed: 'Disputed',
     Completed: 'Completed',
-    Settled: 'Settled'
+    Settled: 'Settled',
+    Deleted: 'Deleted'
 });
 const StateEnum = [
     JobState.Open,
@@ -19,7 +20,8 @@ const StateEnum = [
     JobState.Submitted,
     JobState.Disputed,
     JobState.Completed,
-    JobState.Settled
+    JobState.Settled,
+    JobState.Deleted
 ]
 
 const StateToClass = {
