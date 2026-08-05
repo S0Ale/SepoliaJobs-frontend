@@ -1,25 +1,32 @@
 import Alpine from 'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/module.esm.js'
 import { loginGate, returnToLogin } from './login-module.js'
-import { shortenAddress, getType } from './util.js'
+import { shortenAddress, getType, JobState } from './util.js'
 import { setup, getJobs, createJob } from './contract-module.js'
 
 let user = {address: '', balance: ''}
 let jobs = []
 let userJobs = []
+let deletedJobs = []
 
 async function listJobs(alljobs=true, userjobs=false){
 	if(alljobs) jobs = await getJobs(user.provider, 10)
 	if(userjobs){
 		userJobs = jobs.filter((job) => getType(user.address, job) !== null)
+		deletedJobs = userJobs.filter((job) => job.state == JobState.Deleted)
+		userJobs = userJobs.filter((job) => !deletedJobs.some(djob => djob.id === job.id))
 	}
 	jobs = jobs.filter((job) => !userJobs.some(userjob => userjob.id === job.id))
+	jobs = jobs.filter((job) => job.state == JobState.Open)
 
 	if(alljobs) Alpine.store('jobs', jobs)
-	if(userjobs) Alpine.store('userjobs', userJobs)
+	if(userjobs){
+		Alpine.store('userjobs', userJobs)
+		Alpine.store('deletedjobs', deletedJobs)
+	}
 }
 
 document.addEventListener('alpine:init', () => {
-	Alpine.store('jobs', [])
+	Alpine.store('deletedjobs', [])
 
 	Alpine.data('jobtemplate', () => ({
 		formatDate: (timestamp) => { return (new Date(Number(timestamp)*1000)).toDateString() },

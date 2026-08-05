@@ -93,7 +93,7 @@
 				</div>
 			</section>
 
-			<section class="segment relative sector mt-12 p-3 grid grid-cols-2 gap-3 bg-[#f7f7f7]">
+			<section x-data="dropdown" class="segment relative sector mt-12 p-3 grid grid-cols-2 gap-3 bg-[#f7f7f7]">
 				<div class="flex flex-row justify-between absolute pl-2 w-full bottom-[100%]">
 					<span class="seg-title text-md text-gray-400 noselect">Your jobs</span>
 
@@ -113,6 +113,23 @@
 						<span x-text="deadline" class="pl-2 text-sm flex flex-col justify-center text-gray-400"></span>
 					</div>
 				</template>
+				<div x-show="open" class="pt-3 col-span-2 self-center grid grid-cols-2 gap-3 border-t border-gray-300">
+					<template x-data="jobtemplate" x-for="job in $store.deletedjobs">
+						<div x-data="{deadline: formatDate(job.deadline), type: getJobType(job)}" @click="redirectJob(job)" class="job-card relative flex flex-row justify-between p-3 cursor-pointer">
+							<div class="flex flex-col">
+								<h3 x-text="job.title" class="max-w-80 truncate noselect"></h3>
+								<span x-text="type" class="text-sm text-gray-400 transition-[color] duration-250"></span>
+							</div>
+							<span x-text="deadline" class="pl-2 text-sm flex flex-col justify-center text-gray-400"></span>
+						</div>
+					</template>
+				</div>
+
+				<button x-show="$store.deletedjobs.length > 0" @click="toggle()" class="flex flex-row px-2 py-1 absolute top-[100%] right-0 text-sm text-gray-400 hover:text-[#555555] hover:stroke-[#555555] transition-[color] duration-250">See deleted
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 ml-1 self-center" :class="open ? 'rotate-180' : ''">
+						<path stroke-linecap="round" stroke-linejoin="round" d="m4.5 5.25 7.5 7.5 7.5-7.5m-15 6 7.5 7.5 7.5-7.5" />
+					</svg>
+				</button>
 			</section>
 
 			<section class="segment relative sector mt-24 mb-4 p-3 grid grid-cols-2 gap-3 bg-[#f7f7f7]">

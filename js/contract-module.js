@@ -79,9 +79,6 @@ async function getJobs(provider, lasts){
 		let id = e.args.jobID
         let j = await getJob(id)
 
-        if (j.state == JobState.Deleted)
-            continue
-
 		res.push(j)
 	}
 
