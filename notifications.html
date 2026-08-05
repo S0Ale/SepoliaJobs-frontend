@@ -33,15 +33,28 @@
 			<section class="segment relative sector mt-10">
 				<span class="seg-title absolute px-2 bottom-[100%] text-md text-gray-400 noselect">Notifications</span>
 				<template x-data="eventtemplate" x-for="(e, index) in $store.events">
-					<div x-data="{date: formatDate(e.timestamp)}" class="relative flex flex-col sm:flex-row p-3 justify-between border-b border-gray-300 last:border-b-0 text-gray-400 even:bg-[#f7f7f7]">
-						<div>
-							<p x-text="e.type" class="text-[#555555]"></p>
-							<div class="flex flex-row content-center">
-								<p class="mr-2">Job:</p>
-								<a x-bind:href="'/job.html?id='+(e.job.id)" x-text="e.job.title" class="inline-block max-w-64 text-blue-400 text-ellipsis truncate hover:underline"></a>
+					<div x-data="{date: formatDate(e.timestamp)}" class="relative p-3 border-b border-gray-300 last:border-b-0 text-gray-400 even:bg-[#f7f7f7]">
+						<div class="flex flex-col sm:flex-row justify-between">
+							<div x-data="{extratext: formatExtraInfo(e.extrainfo)}">
+								<p x-text="e.type" class="text-[#555555]"></p>
+								<div class="flex flex-row content-center">
+									<p class="mr-2">Job:</p>
+									<a x-bind:href="'/job.html?id='+(e.job.id)" x-text="e.job.title" class="inline-block max-w-64 text-blue-400 text-ellipsis truncate hover:underline"></a>
+								</div>
+								<p x-show="e.extrainfo != null" x-text="extratext" class="text-sm">Blabla</p>
 							</div>
+							<p x-text="date" class="text-sm"></p>
 						</div>
-						<p x-text="date" class="text-sm"></p>
+
+						<div x-data="dropdown" x-show="e.comment != null" class="mt-2 text-sm">
+							<button @click="toggle" class="flex flex-row text-sm transition-[color] duration-250 hover:text-[#555555] hover:stroke-blue-600">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mr-1 size-4 self-center">
+									<path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+								</svg>
+								comment<span x-show="open">:</span>
+							</button>
+							<p x-show="open" class="mt-2 text-gray-500">Comment blablablabla</p>
+						</div>
 					</div>
 				</template>
 			</section>

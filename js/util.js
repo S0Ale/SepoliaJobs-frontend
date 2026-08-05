@@ -60,4 +60,8 @@ function stateToClass(state) {
     return StateToClass[state]
 }
 
-export { getstore, setstore, shortenAddress, getType, toState, stateToClass, JobState };
+function isAddress(str) {
+  return /^0x[a-fA-F0-9]{40}$/.test(str);
+}
+
+export { getstore, setstore, shortenAddress, getType, toState, stateToClass, JobState, isAddress };

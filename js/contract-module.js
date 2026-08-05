@@ -17,38 +17,35 @@ const EventType = {
 }
 
 const eHandlers = {}
-eHandlers[EventType.JobCreated] = async (event, type) => {
+async function genericHandler(event, type){
+	let id = event.args.jobID
 	let obj = { type: type, timestamp: event.args.timestamp }
 	obj.job = await getJob(id)
 	obj.job.id = id
+	obj.extrainfo = null // extra parameter
 	return obj
 }
+
+eHandlers[EventType.JobCreated] = genericHandler
 eHandlers[EventType.FreelancerApplied] = async (event, type) => {
-	let id = event.args.jobID
-	let obj = {type: type, timestamp: event.args.timestamp, freelancer: event.args.freelancer}
-	obj.job = await getJob(id)
-	obj.job.id = id
+	let obj = await genericHandler(event, type)
+	obj.extrainfo = {freelancer: event.args.freelancer}
 	return obj
 }
 eHandlers[EventType.DisputeOpened] = async (event, type) => {
-	let id = event.args.jobID
-	let obj = {type: type, timestamp: event.args.timestamp, opener: event.args.opener}
-	obj.job = await getJob(id)
-	obj.job.id = id
+	let obj = await genericHandler(event, type)
+	obj.extrainfo = {opener: event.args.opener}
 	return obj
 }
 eHandlers[EventType.DisputeClosed] = async (event, type) => {
-	let id = event.args.jobID
-	let obj = {type: type, timestamp: event.args.timestamp, isclient: event.args.isClient}
-	obj.job = await getJob(id)
-	obj.job.id = id
+	let obj = await genericHandler(event, type)
+	obj.extrainfo = {isClient: event.args.isClient}
 	return obj
 }
 eHandlers[EventType.DisputeComment] = async (event, type) => {
-	let id = event.args.jobID
-	let obj = {type: type, timestamp: event.args.timestamp, author: event.args.author, comment: event.args.text}
-	obj.job = await getJob(id)
-	obj.job.id = id
+	let obj = await genericHandler(event, type)
+	obj.extrainfo = {author: event.args.author}
+	obj.comment = event.args.text
 	return obj
 }
 
@@ -76,13 +73,13 @@ async function getJobs(provider, lasts){
 	let limit = lasts < 0 ? MAX_JOBS : lasts
 	const filter = contract.filters.JobCreated()
 	const events = await contract.queryFilter(filter, 0, "latest")
+	console.log(events)
 
 	const res = []
 	for(const e of events.slice(-limit)){
 		let id = e.args.jobID
         let j = await getJob(id)
 
-        console.log(j)
         if (j.state == JobState.Deleted)
             continue
 

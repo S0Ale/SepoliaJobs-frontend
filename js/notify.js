@@ -1,6 +1,6 @@
 import Alpine from 'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/module.esm.js'
 import { loginGate, returnToLogin } from './login-module.js'
-import { getstore, setstore, shortenAddress, getType } from './util.js'
+import { shortenAddress, getType, isAddress } from './util.js'
 import { setup, getEvents, EventType } from './contract-module.js'
 
 let user = {address: '', balance: ''}
@@ -15,6 +15,12 @@ document.addEventListener('alpine:init', () => {
 			let date = new Date(Number(timestamp)*1000) 
 			return `${date.toDateString()} ${date.toLocaleTimeString()}`
 		},
+		formatExtraInfo: (extrainfo) => {
+			if(!extrainfo) return ''
+			let [[key, value]] = Object.entries(extrainfo)
+			if(isAddress(value)) value = shortenAddress(value)
+			return `${key}: ${value}`
+		}
 	}))
 
 	Alpine.data('account', () => ({
@@ -33,7 +39,6 @@ document.addEventListener('alpine:init', () => {
 			events = await getEvents(eventTypes, (job) => {
 				return (job.client == user.address) || (job.freelancer == user.address)
 			})
-			console.log(events)
 			Alpine.store('events', events)
 		}
 	}))
