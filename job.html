@@ -51,29 +51,26 @@
                     </div>
                 </div>
             </section>
-            <section x-data="account" class="segment flex flex-row-reverse mt-6 pr-2">
-                <button x-show="isAssignable" @click="apply" class="std-button h-fit mx-2 px-3 py-2">Apply</button>
-                <button x-show="isSubmittable" @click="submit" class="std-button h-fit mx-2 px-3 py-2">Submit</button>
-                <button x-show="isDeletable" @click="del" class="danger-button h-fit mx-2 px-3 py-2">Delete</button>
-            </section>
-            <section class="segment relative sector mt-10">
-				<span class="seg-title absolute px-2 bottom-[100%] text-md text-gray-400 noselect">Notifications</span>
+            <section x-data="account" x-show="applicationsNotEmpty" class="segment relative sector mt-12">
+				<span class="seg-title absolute px-2 bottom-[100%] text-md text-gray-400 noselect">Applications</span>
 				<template x-data="eventtemplate" x-for="(e, index) in $store.events">
-					<div x-data="{date: formatDate(e.timestamp)}" class="relative p-3 border-b border-gray-300 last:border-b-0 text-gray-400 even:bg-[#f7f7f7]">
+					<div x-data="{date: formatDate(e.timestamp)}" class="relative p-3 border-b border-gray-300 last:border-b-0 text-gray-400 bg-[#f7f7f7]">
 						<div class="flex flex-col sm:flex-row justify-between">
 							<div x-data="{extratext: formatExtraInfo(e.extrainfo)}">
-								<p x-text="e.type" class="text-[#555555]"></p>
-								<div class="flex flex-row content-center">
-									<p class="mr-2">Job:</p>
-									<a x-bind:href="'/job.html?id='+(e.job.id)" x-text="e.job.title" class="inline-block max-w-64 text-blue-400 text-ellipsis truncate hover:underline"></a>
-								</div>
+								<p x-show="e.extrainfo != null" x-text="extratext" class="mb-2 text-[#555555]"></p>
+                                <p x-text="date" class="text-sm"></p>
 							</div>
-							<p x-text="date" class="text-sm"></p>
+                            <button @click="accept(e.extrainfo.freelancer)" class="std-button h-fit mr-1 px-3 py-2">Accept</button>
 						</div>
 					</div>
 				</template>
 			</section>
-		</div>
+		    <section x-data="account" class="segment flex flex-row-reverse mt-6 pr-2">
+                <button x-show="isAssignable" @click="apply" class="std-button h-fit mx-2 px-3 py-2">Apply</button>
+                <button x-show="isSubmittable" @click="submit" class="std-button h-fit mx-2 px-3 py-2">Submit</button>
+                <button x-show="isDeletable" @click="del" class="danger-button h-fit mx-2 px-3 py-2">Delete</button>
+            </section>
+        </div>
 
 		<div class="margin"></div>
 	</main>

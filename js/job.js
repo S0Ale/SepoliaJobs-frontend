@@ -1,7 +1,7 @@
 import Alpine from 'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/module.esm.js'
 import { loginGate, returnToLogin } from './login-module.js'
-import { shortenAddress, toState, stateToClass, JobState } from './util.js'
-import { setup, getJob, applyToJob, submitWork, deleteJob } from './contract-module.js'
+import { shortenAddress, toState, stateToClass, JobState, isAddress } from './util.js'
+import { setup, getJob, applyToJob, submitWork, deleteJob, approveFreelancer, EventType, getEvents } from './contract-module.js'
 
 let user = {address: '', balance: ''}
 let job = {title: '', client: '', freelancer: ''}
@@ -28,10 +28,20 @@ document.addEventListener('alpine:init', () => {
 		},
 		formatExtraInfo: (extrainfo) => {
 			if(!extrainfo) return ''
-			let [[key, value]] = Object.entries(extrainfo)
+			let [[_, value]] = Object.entries(extrainfo)
 			if(isAddress(value)) value = shortenAddress(value)
-			return `${key}: ${value}`
-		}
+			return `${value}`
+		},
+        accept: async (address) => {
+            try {
+                let tx = await approveFreelancer(job.id, address)
+                const receipt = await tx.wait()
+				console.log(receipt)
+                window.location.href = `./job.html?id=${job.id}`
+            } catch(e) {
+                console.log(e)
+            }
+        }
 	}))
 
 	Alpine.data('account', () => ({
@@ -43,7 +53,7 @@ document.addEventListener('alpine:init', () => {
                 let tx = await applyToJob(job.id)
                 const receipt = await tx.wait()
 				console.log(receipt)
-                window.location.href = './home.html'
+                window.location.href = `./job.html?id=${job.id}`
             } catch(e) {
                 console.log(e)
             }
@@ -54,7 +64,7 @@ document.addEventListener('alpine:init', () => {
                 let tx = await submitWork(job.id)
                 const receipt = await tx.wait()
 				console.log(receipt)
-                window.location.href = './job.html'
+                window.location.href = `./job.html?id=${job.id}`
             } catch(e) {
                 console.log(e)
             }
@@ -71,6 +81,7 @@ document.addEventListener('alpine:init', () => {
             }
         },
 
+        applicationsNotEmpty: false,
         isDeletable: false,
         isAssignable: false,
         isSubmittable: false,
@@ -90,7 +101,6 @@ document.addEventListener('alpine:init', () => {
             job = res
 
             this.isDeletable = user.address == res.client && res.state == JobState.Open
-            this.isAssignable = user.address != res.client && res.state == JobState.Open
             this.isSubmittable = user.address == res.freelancer && res.state == JobState.Assigned
 
 			Alpine.store('jobdata', {
@@ -104,10 +114,18 @@ document.addEventListener('alpine:init', () => {
                 stateClass: stateToClass(res.state)
 			})
 
-            events = await getEvents(eventTypes, (job) => {
-				return job.client == user.address
-			})
-			Alpine.store('events', events)
+            events = await getEvents(eventTypes, (job) => { return true })
+
+            this.isAssignable =
+                user.address != res.client
+                && res.state == JobState.Open
+                && !events.some((e) => e.extrainfo.freelancer == user.address)
+            events = events.filter((e) => e.job.client == user.address)
+
+            const unique = Array.from(new Map(events.map(e => [e.extrainfo.freelancer, e])).values())
+			Alpine.store('events', unique)
+
+            this.applicationsNotEmpty = job.state == JobState.Open && events.length > 0
 		}
 	}))
 })

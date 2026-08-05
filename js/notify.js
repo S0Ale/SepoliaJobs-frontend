@@ -11,8 +11,8 @@ document.addEventListener('alpine:init', () => {
 	Alpine.store('events', [])
 
 	Alpine.data('eventtemplate', () => ({
-		formatDate: (timestamp) => { 
-			let date = new Date(Number(timestamp)*1000) 
+		formatDate: (timestamp) => {
+			let date = new Date(Number(timestamp)*1000)
 			return `${date.toDateString()} ${date.toLocaleTimeString()}`
 		},
 		formatExtraInfo: (extrainfo) => {

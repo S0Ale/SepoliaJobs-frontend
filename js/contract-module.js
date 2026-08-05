@@ -115,8 +115,12 @@ async function submitWork(jobID) {
     return await signedContract.submitWork(jobID)
 }
 
+async function approveFreelancer(jobID, freelancer) {
+    return await signedContract.approveFreelancer(jobID, freelancer)
+}
+
 async function deleteJob(jobID) {
     return await signedContract.deleteJob(jobID)
 }
 
-export { setup, getJob, getJobs, createJob, applyToJob, submitWork, deleteJob, getEvents, EventType }
+export { setup, getJob, getJobs, createJob, applyToJob, submitWork, deleteJob, getEvents, approveFreelancer, EventType }
