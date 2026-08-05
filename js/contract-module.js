@@ -123,4 +123,8 @@ async function deleteJob(jobID) {
     return await signedContract.deleteJob(jobID)
 }
 
-export { setup, getJob, getJobs, createJob, applyToJob, submitWork, deleteJob, getEvents, approveFreelancer, EventType }
+async function refund(jobID) {
+    return await signedContract.tryRefund(jobID)
+}
+
+export { setup, getJob, getJobs, createJob, applyToJob, submitWork, deleteJob, getEvents, approveFreelancer, refund, EventType }

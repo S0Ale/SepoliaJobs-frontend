@@ -1,7 +1,7 @@
 import Alpine from 'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/module.esm.js'
 import { loginGate, returnToLogin } from './login-module.js'
-import { shortenAddress, toState, stateToClass, JobState, isAddress } from './util.js'
-import { setup, getJob, applyToJob, submitWork, deleteJob, approveFreelancer, EventType, getEvents } from './contract-module.js'
+import { shortenAddress, toState, stateToClass, JobState, isAddress, call } from './util.js'
+import { setup, getJob, applyToJob, submitWork, deleteJob, approveFreelancer, refund, EventType, getEvents } from './contract-module.js'
 
 let user = {address: '', balance: ''}
 let job = {title: '', client: '', freelancer: ''}
@@ -50,9 +50,7 @@ document.addEventListener('alpine:init', () => {
         apply: async () => {
             try {
                 //TODO: implement the listening of the event of the application to make the button go away
-                let tx = await applyToJob(job.id)
-                const receipt = await tx.wait()
-				console.log(receipt)
+                await call(async () => await applyToJob(job.id))
                 window.location.href = `./job.html?id=${job.id}`
             } catch(e) {
                 console.log(e)
@@ -61,9 +59,7 @@ document.addEventListener('alpine:init', () => {
 
         submit: async () => {
             try {
-                let tx = await submitWork(job.id)
-                const receipt = await tx.wait()
-				console.log(receipt)
+                await call(async () => await submitWork(job.id))
                 window.location.href = `./job.html?id=${job.id}`
             } catch(e) {
                 console.log(e)
@@ -72,9 +68,16 @@ document.addEventListener('alpine:init', () => {
 
         del: async () => {
             try {
-                let tx = await deleteJob(job.id)
-                const receipt = await tx.wait()
-				console.log(receipt)
+                await call(async () => await deleteJob(job.id))
+                window.location.href = './home.html'
+            } catch(e) {
+                console.log(e)
+            }
+        },
+
+        ref: async () => {
+            try {
+                await call(async () => await refund(job.id))
                 window.location.href = './home.html'
             } catch(e) {
                 console.log(e)
@@ -82,6 +85,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         applicationsNotEmpty: false,
+        isRefundable: false,
         isDeletable: false,
         isAssignable: false,
         isSubmittable: false,
@@ -100,7 +104,8 @@ document.addEventListener('alpine:init', () => {
 			let res = await getJob(BigInt(params.id))
             job = res
 
-            this.isDeletable = user.address == res.client && res.state == JobState.Open
+            this.isRefundable = user.address == res.client && BigInt(Math.floor(Date.now() / 1000)) >= res.deadline && res.state != JobState.Deleted
+            this.isDeletable = !this.isRefundable && user.address == res.client && res.state == JobState.Open
             this.isSubmittable = user.address == res.freelancer && res.state == JobState.Assigned
 
 			Alpine.store('jobdata', {

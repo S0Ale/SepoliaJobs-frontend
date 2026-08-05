@@ -56,4 +56,10 @@ function isAddress(str) {
   return /^0x[a-fA-F0-9]{40}$/.test(str);
 }
 
-export { shortenAddress, getType, toState, stateToClass, JobState, isAddress };
+async function call(contractFunc) {
+    const tx = await contractFunc()
+    const receipt = await tx.wait()
+    console.log(receipt)
+}
+
+export { shortenAddress, getType, toState, stateToClass, JobState, isAddress, call };

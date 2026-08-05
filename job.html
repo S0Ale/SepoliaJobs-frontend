@@ -68,6 +68,7 @@
 		    <section x-data="account" class="segment flex flex-row-reverse mt-6 pr-2">
                 <button x-show="isAssignable" @click="apply" class="std-button h-fit mx-2 px-3 py-2">Apply</button>
                 <button x-show="isSubmittable" @click="submit" class="std-button h-fit mx-2 px-3 py-2">Submit</button>
+                <button x-show="isRefundable" @click="ref" class="std-button h-fit mx-2 px-3 py-2">Refund</button>
                 <button x-show="isDeletable" @click="del" class="danger-button h-fit mx-2 px-3 py-2">Delete</button>
             </section>
         </div>
