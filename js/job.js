@@ -38,7 +38,7 @@ document.addEventListener('alpine:init', () => {
                 let tx = await submitWork(job.id)
                 const receipt = await tx.wait()
 				console.log(receipt)
-                window.location.href = './home.html'
+                window.location.href = './job.html'
             } catch(e) {
                 console.log(e)
             }
@@ -72,13 +72,10 @@ document.addEventListener('alpine:init', () => {
 
 			let res = await getJob(BigInt(params.id))
             job = res
-            console.log(job)
 
             this.isDeletable = user.address == res.client && res.state == JobState.Open
             this.isAssignable = user.address != res.client && res.state == JobState.Open
             this.isSubmittable = user.address == res.freelancer && res.state == JobState.Assigned
-            console.log(user.address)
-            console.log(res.client)
 
 			Alpine.store('jobdata', {
 				title: res.title,
