@@ -56,6 +56,23 @@
                 <button x-show="isSubmittable" @click="submit" class="std-button h-fit mx-2 px-3 py-2">Submit</button>
                 <button x-show="isDeletable" @click="del" class="danger-button h-fit mx-2 px-3 py-2">Delete</button>
             </section>
+            <section class="segment relative sector mt-10">
+				<span class="seg-title absolute px-2 bottom-[100%] text-md text-gray-400 noselect">Notifications</span>
+				<template x-data="eventtemplate" x-for="(e, index) in $store.events">
+					<div x-data="{date: formatDate(e.timestamp)}" class="relative p-3 border-b border-gray-300 last:border-b-0 text-gray-400 even:bg-[#f7f7f7]">
+						<div class="flex flex-col sm:flex-row justify-between">
+							<div x-data="{extratext: formatExtraInfo(e.extrainfo)}">
+								<p x-text="e.type" class="text-[#555555]"></p>
+								<div class="flex flex-row content-center">
+									<p class="mr-2">Job:</p>
+									<a x-bind:href="'/job.html?id='+(e.job.id)" x-text="e.job.title" class="inline-block max-w-64 text-blue-400 text-ellipsis truncate hover:underline"></a>
+								</div>
+							</div>
+							<p x-text="date" class="text-sm"></p>
+						</div>
+					</div>
+				</template>
+			</section>
 		</div>
 
 		<div class="margin"></div>

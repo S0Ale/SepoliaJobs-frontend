@@ -5,6 +5,9 @@ import { setup, getJob, applyToJob, submitWork, deleteJob } from './contract-mod
 
 let user = {address: '', balance: ''}
 let job = {title: '', client: '', freelancer: ''}
+let events = []
+
+const eventTypes = [EventType.FreelancerApplied]
 
 const params = new Proxy(new URLSearchParams(window.location.search), {
 	get: (searchParams, prop) => searchParams.get(prop),
@@ -17,6 +20,19 @@ const dateFormatter = new Intl.DateTimeFormat(navigator.language, {
 
 document.addEventListener('alpine:init', () => {
 	Alpine.store('jobdata', {})
+
+    Alpine.data('eventtemplate', () => ({
+		formatDate: (timestamp) => {
+			let date = new Date(Number(timestamp)*1000)
+			return `${date.toDateString()} ${date.toLocaleTimeString()}`
+		},
+		formatExtraInfo: (extrainfo) => {
+			if(!extrainfo) return ''
+			let [[key, value]] = Object.entries(extrainfo)
+			if(isAddress(value)) value = shortenAddress(value)
+			return `${key}: ${value}`
+		}
+	}))
 
 	Alpine.data('account', () => ({
 		formattedAddr: shortenAddress(user.address),
@@ -87,6 +103,11 @@ document.addEventListener('alpine:init', () => {
                 deadline: dateFormatter.format(new Date(Number(res.deadline) * 1000)),
                 stateClass: stateToClass(res.state)
 			})
+
+            events = await getEvents(eventTypes, (job) => {
+				return job.client == user.address
+			})
+			Alpine.store('events', events)
 		}
 	}))
 })
