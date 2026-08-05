@@ -19,7 +19,7 @@ async function getData(){
 	const signer = await provider.getSigner();
 	let address = await signer.getAddress();
 	let balance = await provider.getBalance(address);
-	balance = `${ethers.formatEther(balance)} ETH`;
+	balance = `${ethers.formatEther(balance)}`;
 
 	return { provider: provider, signer: signer, address: address, balance: balance }
 }

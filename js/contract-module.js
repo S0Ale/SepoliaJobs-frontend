@@ -73,7 +73,6 @@ async function getJobs(provider, lasts){
 	let limit = lasts < 0 ? MAX_JOBS : lasts
 	const filter = contract.filters.JobCreated()
 	const events = await contract.queryFilter(filter, 0, "latest")
-	console.log(events)
 
 	const res = []
 	for(const e of events.slice(-limit)){

@@ -1,6 +1,6 @@
 import Alpine from 'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/module.esm.js'
 import { loginGate, returnToLogin } from './login-module.js'
-import { getstore, setstore, shortenAddress, getType } from './util.js'
+import { shortenAddress, getType } from './util.js'
 import { setup, getJobs, createJob } from './contract-module.js'
 
 let user = {address: '', balance: ''}
