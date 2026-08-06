@@ -51,7 +51,7 @@
                     </div>
                 </div>
             </section>
-            <section x-data="account" x-show="applicationsNotEmpty" class="segment relative sector mt-12">
+            <section x-data  x-show="$store.state.applicationsNotEmpty" class="segment relative sector mt-12">
 				<span class="seg-title absolute px-2 bottom-[100%] text-md text-gray-400 noselect">Applications</span>
 				<template x-data="eventtemplate" x-for="(e, index) in $store.events">
 					<div x-data="{date: formatDate(e.timestamp)}" class="relative p-3 border-b border-gray-300 last:border-b-0 text-gray-400 bg-[#f7f7f7]">
@@ -60,16 +60,16 @@
 								<p x-show="e.extrainfo != null" x-text="extratext" class="mb-2 text-[#555555]"></p>
                                 <p x-text="date" class="text-sm"></p>
 							</div>
-                            <button @click="accept(e.extrainfo.freelancer)" class="std-button h-fit mr-1 px-3 py-2">Accept</button>
+                            <button x-data="job" @click="accept(e.extrainfo.freelancer)" class="std-button h-fit mr-1 px-3 py-2">Accept</button>
 						</div>
 					</div>
 				</template>
 			</section>
-		    <section x-data="account" class="segment flex flex-row-reverse mt-6 pr-2">
-                <button x-show="isAssignable" @click="apply" class="std-button h-fit mx-2 px-3 py-2">Apply</button>
-                <button x-show="isSubmittable" @click="submit" class="std-button h-fit mx-2 px-3 py-2">Submit</button>
-                <button x-show="isRefundable" @click="ref" class="std-button h-fit mx-2 px-3 py-2">Refund</button>
-                <button x-show="isDeletable" @click="del" class="danger-button h-fit mx-2 px-3 py-2">Delete</button>
+		    <section x-data="job" class="segment flex flex-row-reverse mt-6 pr-2">
+                <button x-show="$store.state.isAssignable" @click="apply" class="std-button h-fit mx-2 px-3 py-2">Apply</button>
+                <button x-show="$store.state.isSubmittable" @click="submit" class="std-button h-fit mx-2 px-3 py-2">Submit</button>
+                <button x-show="$store.state.isRefundable" @click="ref" class="std-button h-fit mx-2 px-3 py-2">Refund</button>
+                <button x-show="$store.state.isDeletable" @click="del" class="danger-button h-fit mx-2 px-3 py-2">Delete</button>
             </section>
         </div>
 

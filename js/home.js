@@ -1,6 +1,6 @@
 import Alpine from 'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/module.esm.js'
 import { loginGate, returnToLogin } from './login-module.js'
-import { shortenAddress, getType, JobState } from './util.js'
+import { shortenAddress, getType, JobState, call } from './util.js'
 import { setup, getJobs, createJob } from './contract-module.js'
 
 let user = {address: '', balance: ''}
@@ -65,9 +65,7 @@ document.addEventListener('alpine:init', () => {
 			data.append('deadline', Math.floor(new Date(date).getTime() / 1000))
 
 			try{
-				let tx = await createJob(user.address, data)
-				const receipt = await tx.wait()
-				console.log(receipt)
+                await call(async () => await createJob(user.address, data))
 				this.openmodal = false
 				await listJobs(true, true)
 			}catch(e){

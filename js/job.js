@@ -21,65 +21,7 @@ const dateFormatter = new Intl.DateTimeFormat(navigator.language, {
 document.addEventListener('alpine:init', () => {
 	Alpine.store('jobdata', {})
 
-    Alpine.data('eventtemplate', () => ({
-		formatDate: (timestamp) => {
-			let date = new Date(Number(timestamp)*1000)
-			return `${date.toDateString()} ${date.toLocaleTimeString()}`
-		},
-		formatExtraInfo: (extrainfo) => {
-			if(!extrainfo) return ''
-			let [[_, value]] = Object.entries(extrainfo)
-			if(isAddress(value)) value = shortenAddress(value)
-			return `${value}`
-		},
-        accept: async (address, data) => {
-            try {
-                await call(async () => await approveFreelancer(job.id, address))
-                data.updateState()
-            } catch(e) {
-                console.log(e)
-            }
-        }
-	}))
-
-	Alpine.data('account', () => ({
-		formattedAddr: shortenAddress(user.address),
-
-        async apply() {
-            try {
-                await call(async () => await applyToJob(job.id))
-                this.updateState()
-            } catch(e) {
-                console.log(e)
-            }
-        },
-
-        async submit() {
-            try {
-                await call(async () => await submitWork(job.id))
-                this.updateState()
-            } catch(e) {
-                console.log(e)
-            }
-        },
-
-        async del() {
-            try {
-                await call(async () => await deleteJob(job.id))
-                this.updateState()
-            } catch(e) {
-                console.log(e)
-            }
-        },
-
-        async ref() {
-            try {
-                await call(async () => await refund(job.id))
-                this.updateState()
-            } catch(e) {
-                console.log(e)
-            }
-        },
+    Alpine.store('state', {
 
         applicationsNotEmpty: false,
         isRefundable: false,
@@ -87,21 +29,7 @@ document.addEventListener('alpine:init', () => {
         isAssignable: false,
         isSubmittable: false,
 
-		async init(){
-			user = await loginGate(true)
-			if (!user) {
-				returnToLogin()
-				return
-			}
-
-			setup(user.provider, user.signer)
-			this.balance = user.balance
-			this.formattedAddr = shortenAddress(user.address)
-
-            this.updateState()
-		},
-
-        async updateState() {
+        async update() {
             let res = await getJob(BigInt(params.id))
             job = res
 
@@ -133,5 +61,84 @@ document.addEventListener('alpine:init', () => {
 
             this.applicationsNotEmpty = user.address == job.client && job.state == JobState.Open && events.length > 0
         }
+
+    })
+
+    Alpine.data('eventtemplate', () => ({
+		formatDate: (timestamp) => {
+			let date = new Date(Number(timestamp)*1000)
+			return `${date.toDateString()} ${date.toLocaleTimeString()}`
+		},
+		formatExtraInfo: (extrainfo) => {
+			if(!extrainfo) return ''
+			let [[_, value]] = Object.entries(extrainfo)
+			if(isAddress(value)) value = shortenAddress(value)
+			return `${value}`
+		}
+	}))
+
+    Alpine.data('job', () => ({
+        async accept(address) {
+            try {
+                await call(async () => await approveFreelancer(job.id, address))
+                Alpine.store("state").update()
+            } catch(e) {
+                console.log(e)
+            }
+        },
+
+        async apply() {
+            try {
+                await call(async () => await applyToJob(job.id))
+                Alpine.store("state").update()
+            } catch(e) {
+                console.log(e)
+            }
+        },
+
+        async submit() {
+            try {
+                await call(async () => await submitWork(job.id))
+                Alpine.store("state").update()
+            } catch(e) {
+                console.log(e)
+            }
+        },
+
+        async del() {
+            try {
+                await call(async () => await deleteJob(job.id))
+                Alpine.store("state").update()
+            } catch(e) {
+                console.log(e)
+            }
+        },
+
+        async ref() {
+            try {
+                await call(async () => await refund(job.id))
+                Alpine.store("state").update()
+            } catch(e) {
+                console.log(e)
+            }
+        }
+    }))
+
+	Alpine.data('account', () => ({
+		formattedAddr: shortenAddress(user.address),
+
+		async init(){
+			user = await loginGate(true)
+			if (!user) {
+				returnToLogin()
+				return
+			}
+
+			setup(user.provider, user.signer)
+			this.balance = user.balance
+			this.formattedAddr = shortenAddress(user.address)
+            Alpine.store("state").update()
+		},
+
 	}))
 })
