@@ -62,4 +62,14 @@ async function call(contractFunc) {
     console.log(receipt)
 }
 
-export { shortenAddress, getType, toState, stateToClass, JobState, isAddress, call };
+function baseModal(overrides = {}) {
+	return {
+		openmodal: false,
+		modalerror: false,
+		errormsg: '',
+		async submit(){},
+		...overrides
+	}
+}
+
+export { shortenAddress, getType, toState, stateToClass, JobState, isAddress, call, baseModal };

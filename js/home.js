@@ -1,6 +1,6 @@
 import Alpine from 'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/module.esm.js'
 import { loginGate, returnToLogin } from './login-module.js'
-import { shortenAddress, getType, JobState, call } from './util.js'
+import { shortenAddress, getType, JobState, call, baseModal } from './util.js'
 import { setup, getJobs, createJob } from './contract-module.js'
 
 let user = {address: '', balance: ''}
@@ -52,12 +52,8 @@ document.addEventListener('alpine:init', () => {
 		}
 	}))
 
-	Alpine.data('newjobmodal', () => ({
-		openmodal: false,
-		modalerror: false,
-		errormsg: '',
-
-		async submitJob(){
+	Alpine.data('newjobmodal', () => baseModal({ // override submit function
+		async submit(){
 			let form = document.querySelector("#create-job")
 			let data = new FormData(form)
 			let date = data.get('deadline')

@@ -1,6 +1,6 @@
 import Alpine from 'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/module.esm.js'
 import { loginGate, returnToLogin } from './login-module.js'
-import { shortenAddress, toState, stateToClass, JobState, isAddress, call } from './util.js'
+import { shortenAddress, toState, stateToClass, JobState, isAddress, call, baseModal } from './util.js'
 import { setup, getJob, applyToJob, submitWork, deleteJob, approveFreelancer, refund, EventType, getEvents } from './contract-module.js'
 
 let user = {address: '', balance: ''}
@@ -124,6 +124,12 @@ document.addEventListener('alpine:init', () => {
         }
     }))
 
+	Alpine.data('submitmodal', () => baseModal({
+		async submit(){
+			console.log('submitted')
+		}
+	}))
+
 	Alpine.data('account', () => ({
 		formattedAddr: shortenAddress(user.address),
 
@@ -139,6 +145,5 @@ document.addEventListener('alpine:init', () => {
 			this.formattedAddr = shortenAddress(user.address)
             Alpine.store("state").update()
 		},
-
 	}))
 })

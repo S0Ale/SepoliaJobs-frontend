@@ -21,7 +21,22 @@
 			<span x-text="formattedAddr"></span>
 		</div>
 	</nav>
-	<main class="relative mt-16 layer-1 grid grid-cols-[0_1fr_0] sm:grid-cols-[4rem_1fr_4rem] md:grid-cols-[12rem_1fr_12rem] lg:grid-cols-[16rem_1fr_16rem] 2xl:grid-cols-[20rem_1fr_20rem] grid-rows-[1fr] gap-0">
+	<main x-data="submitmodal" class="relative mt-16 layer-1 grid grid-cols-[0_1fr_0] sm:grid-cols-[4rem_1fr_4rem] md:grid-cols-[12rem_1fr_12rem] lg:grid-cols-[16rem_1fr_16rem] 2xl:grid-cols-[20rem_1fr_20rem] grid-rows-[1fr] gap-0">
+
+		<div x-show="openmodal" class="px-4 flex flex-col justify-center bg-gray-950/30 job-modal absolute top-0 left-0 w-full h-full layer2000">
+			<div class="relative bg-white w-full md:w-[425px] h-fit sm:mx-auto border border-gray-300">
+				<button @click="openmodal = false" class="absolute right-0 top-0 p-2 text-gray-400 hover:text-red-500 transition-[color] duration-250">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+					</svg>
+				</button>
+
+				<h2 class="mt-10 px-3 py-2 border-t border-gray-300 text-xl">Submit work</h2>
+
+				<form id="submit-form" @submit.prevent="submit" class="">
+				</form>
+			</div>
+		</div>
 
 		<div class="margin"></div>
 		<div class="flex flex-col border border-y-0 border-gray-300">
@@ -67,7 +82,7 @@
 			</section>
 		    <section x-data="job" class="segment flex flex-row-reverse mt-6 pr-2">
                 <button x-show="$store.state.isAssignable" @click="apply" class="std-button h-fit mx-2 px-3 py-2">Apply</button>
-                <button x-show="$store.state.isSubmittable" @click="submit" class="std-button h-fit mx-2 px-3 py-2">Submit</button>
+                <button x-show="$store.state.isSubmittable" @click="openmodal = true" class="std-button h-fit mx-2 px-3 py-2">Submit</button>
                 <button x-show="$store.state.isRefundable" @click="ref" class="std-button h-fit mx-2 px-3 py-2">Refund</button>
                 <button x-show="$store.state.isDeletable" @click="del" class="danger-button h-fit mx-2 px-3 py-2">Delete</button>
             </section>
