@@ -15,8 +15,11 @@ async function connect() {
 }
 
 async function getData(){
-	const provider = new ethers.BrowserProvider(window.ethereum);
-	const signer = await provider.getSigner();
+	// const provider = new ethers.BrowserProvider(window.ethereum);
+    let url = 'http://127.0.0.1:8545/'
+	const provider = new ethers.JsonRpcProvider(url)
+	const signer = await provider.getSigner(9);
+	// const signer = await provider.getSigner();
 	let address = await signer.getAddress();
 	let balance = await provider.getBalance(address);
 	balance = `${ethers.formatEther(balance)}`;

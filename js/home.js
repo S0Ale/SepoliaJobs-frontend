@@ -63,7 +63,7 @@ document.addEventListener('alpine:init', () => {
 			let date = data.get('deadline')
 			data.delete('deadline')
 			data.append('deadline', Math.floor(new Date(date).getTime() / 1000))
-			
+
 			try{
 				let tx = await createJob(user.address, data)
 				const receipt = await tx.wait()

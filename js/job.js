@@ -32,12 +32,10 @@ document.addEventListener('alpine:init', () => {
 			if(isAddress(value)) value = shortenAddress(value)
 			return `${value}`
 		},
-        accept: async (address) => {
+        accept: async (address, data) => {
             try {
-                let tx = await approveFreelancer(job.id, address)
-                const receipt = await tx.wait()
-				console.log(receipt)
-                window.location.href = `./job.html?id=${job.id}`
+                await call(async () => await approveFreelancer(job.id, address))
+                data.updateState()
             } catch(e) {
                 console.log(e)
             }
@@ -47,38 +45,37 @@ document.addEventListener('alpine:init', () => {
 	Alpine.data('account', () => ({
 		formattedAddr: shortenAddress(user.address),
 
-        apply: async () => {
+        async apply() {
             try {
-                //TODO: implement the listening of the event of the application to make the button go away
                 await call(async () => await applyToJob(job.id))
-                window.location.href = `./job.html?id=${job.id}`
+                this.updateState()
             } catch(e) {
                 console.log(e)
             }
         },
 
-        submit: async () => {
+        async submit() {
             try {
                 await call(async () => await submitWork(job.id))
-                window.location.href = `./job.html?id=${job.id}`
+                this.updateState()
             } catch(e) {
                 console.log(e)
             }
         },
 
-        del: async () => {
+        async del() {
             try {
                 await call(async () => await deleteJob(job.id))
-                window.location.href = './home.html'
+                this.updateState()
             } catch(e) {
                 console.log(e)
             }
         },
 
-        ref: async () => {
+        async ref() {
             try {
                 await call(async () => await refund(job.id))
-                window.location.href = './home.html'
+                this.updateState()
             } catch(e) {
                 console.log(e)
             }
@@ -101,25 +98,29 @@ document.addEventListener('alpine:init', () => {
 			this.balance = user.balance
 			this.formattedAddr = shortenAddress(user.address)
 
-			let res = await getJob(BigInt(params.id))
+            this.updateState()
+		},
+
+        async updateState() {
+            let res = await getJob(BigInt(params.id))
             job = res
 
             this.isRefundable = user.address == res.client && BigInt(Math.floor(Date.now() / 1000)) >= res.deadline && res.state != JobState.Deleted
             this.isDeletable = !this.isRefundable && user.address == res.client && res.state == JobState.Open
             this.isSubmittable = user.address == res.freelancer && res.state == JobState.Assigned
 
-			Alpine.store('jobdata', {
-				title: res.title,
-				client: res.client,
-				freelancer: res.freelancer,
-				desc: res.desc,
+            Alpine.store('jobdata', {
+                title: res.title,
+                client: res.client,
+                freelancer: res.freelancer,
+                desc: res.desc,
                 state: res.state,
                 payment: ethers.formatUnits(res.payment, "ether"),
                 deadline: dateFormatter.format(new Date(Number(res.deadline) * 1000)),
                 stateClass: stateToClass(res.state)
-			})
+            })
 
-            events = await getEvents(eventTypes, (job) => { return true })
+            events = await getEvents(eventTypes, (j) => { return job.id == j.id })
 
             this.isAssignable =
                 user.address != res.client
@@ -128,9 +129,9 @@ document.addEventListener('alpine:init', () => {
             events = events.filter((e) => e.job.client == user.address)
 
             const unique = Array.from(new Map(events.map(e => [e.extrainfo.freelancer, e])).values())
-			Alpine.store('events', unique)
+            Alpine.store('events', unique)
 
-            this.applicationsNotEmpty = job.state == JobState.Open && events.length > 0
-		}
+            this.applicationsNotEmpty = user.address == job.client && job.state == JobState.Open && events.length > 0
+        }
 	}))
 })
