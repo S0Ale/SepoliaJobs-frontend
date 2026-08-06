@@ -78,6 +78,8 @@ async function getJobs(provider, lasts){
 	for(const e of events.slice(-limit)){
 		let id = e.args.jobID
         let j = await getJob(id)
+		let date = new Date(Number(j.deadline)*1000)
+		j.expired = Date.now() > date.getTime()
 
 		res.push(j)
 	}
