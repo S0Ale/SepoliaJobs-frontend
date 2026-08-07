@@ -146,4 +146,14 @@ document.addEventListener('alpine:init', () => {
             Alpine.store("state").update()
 		},
 	}))
+
+	Alpine.data('submitform', () => ({
+		data: new FormData(),
+		files: null,
+
+		async submitFiles(){},
+		async print(){
+			console.log(this.files)
+		}
+	}))
 })

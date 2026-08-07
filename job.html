@@ -23,7 +23,7 @@
 	</nav>
 	<main x-data="submitmodal" class="relative mt-16 layer-1 grid grid-cols-[0_1fr_0] sm:grid-cols-[4rem_1fr_4rem] md:grid-cols-[12rem_1fr_12rem] lg:grid-cols-[16rem_1fr_16rem] 2xl:grid-cols-[20rem_1fr_20rem] grid-rows-[1fr] gap-0">
 
-		<div x-show="openmodal" class="px-4 flex flex-col justify-center bg-gray-950/30 job-modal absolute top-0 left-0 w-full h-full layer2000">
+		<div x-data="submitform" x-show="openmodal" class="px-4 flex flex-col justify-center bg-gray-950/30 job-modal absolute top-0 left-0 w-full h-full layer2000">
 			<div class="relative bg-white w-full md:w-[425px] h-fit sm:mx-auto border border-gray-300">
 				<button @click="openmodal = false" class="absolute right-0 top-0 p-2 text-gray-400 hover:text-red-500 transition-[color] duration-250">
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -33,7 +33,21 @@
 
 				<h2 class="mt-10 px-3 py-2 border-t border-gray-300 text-xl">Submit work</h2>
 
-				<form id="submit-form" @submit.prevent="submit" class="">
+				<form id="submit-form" @submit.prevent="submitFiles">
+					<div class="my-2 px-3">
+						<label for="filesubmit" class="text-gray-400">Choose file to submit:</label>
+						<input type="file" name="filesubmit" class="text-gray-500" multiple x-on:change="files = Object.values($event.target.files)"/>
+					</div>
+					<div x-show="files" class="mx-3 border-t border-gray-300">
+						<template x-for="f of files">
+							<p x-text="f.name" class="text-gray-500 text-sm"></p>
+						</template>
+					</div>
+
+					<p x-show="modalerror" x-text="errormsg" class="mt-4 text-red-500 px-3 text-sm">djslfsdlkdsh</p>
+					<div class="mt-4 flex flex-row pr-4 pb-4 justify-end">
+						<button type="submit" class="std-button h-fit px-3 py-2">Submit</button>
+					</div>
 				</form>
 			</div>
 		</div>
