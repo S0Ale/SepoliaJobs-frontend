@@ -20,8 +20,9 @@ const dateFormatter = new Intl.DateTimeFormat(navigator.language, {
 
 document.addEventListener('alpine:init', () => {
 	Alpine.store('jobdata', {})
+    Alpine.store("loading", true)
 
-    Alpine.store('state', {
+    Alpine.store("state", {
 
         applicationsNotEmpty: false,
         isRefundable: false,
