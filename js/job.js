@@ -20,7 +20,6 @@ const dateFormatter = new Intl.DateTimeFormat(navigator.language, {
 
 document.addEventListener('alpine:init', () => {
 	Alpine.store('jobdata', {})
-    Alpine.store("loading", true)
 
     Alpine.store("state", {
 
@@ -145,6 +144,7 @@ document.addEventListener('alpine:init', () => {
 			this.balance = user.balance
 			this.formattedAddr = shortenAddress(user.address)
             Alpine.store("state").update()
+			Alpine.store("loading", false)
 		},
 	}))
 

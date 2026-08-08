@@ -17,6 +17,12 @@ document.addEventListener('alpine:init', () => {
 			this.minDateTime = new Date().toISOString().slice(0, 16)
 		}
 	}))
+
+	Alpine.data('loadstate', () => ({
+		loadtrue(){ Alpine.store('loading', true) },
+		loadfalse(){ Alpine.store('loading', false) }
+	}))
 })
 
+Alpine.store('loading', true)
 Alpine.start()

@@ -13,7 +13,7 @@
 <body x-data="newjobmodal" class="relative w-full font-sans layer0">
 
 	<div x-show="openmodal" class="px-4 flex flex-col justify-center bg-gray-950/30 job-modal absolute top-0 left-0 w-full h-full layer2000">
-		<div class="relative bg-white w-full md:w-[425px] h-fit sm:mx-auto border border-gray-300">
+		<div x-data="loadstate" class="relative bg-white w-full md:w-[425px] h-fit sm:mx-auto border border-gray-300">
 			<button @click="openmodal = false" class="absolute right-0 top-0 p-2 text-gray-400 hover:text-red-500 transition-[color] duration-250">
 				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
 					<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -22,7 +22,7 @@
 
 			<h2 class="mt-10 px-3 py-2 border-t border-gray-300 text-xl">Create new Job</h2>
 
-			<form id="create-job" @submit.prevent="submit">
+			<form id="create-job" @submit.prevent="loadtrue();await submit();loadfalse()">
 				<div class="mt-6 px-3 flex flex-row">
 					<div class="mr-4 flex-2">
 						<label for="title" class="text-gray-400">Title</label>
@@ -49,7 +49,7 @@
 
 				<p x-show="modalerror" x-text="errormsg" class="mt-4 text-red-500 px-3 text-sm"></p>
 				<div class="mt-4 flex flex-row pr-4 pb-4 justify-end">
-					<button type="submit" class="std-button h-fit px-3 py-2">Create job</button>
+					<button type="submit" class="std-button h-fit px-3 py-2" :class="$store.loading ? 'btn-inactive' : ''">Create job</button>
 				</div>
 			</form>
 		</div>

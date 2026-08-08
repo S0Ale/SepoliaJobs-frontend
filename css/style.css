@@ -83,6 +83,10 @@ body{
 .std-button:hover{
 	background: var(--main-light);
 }
+.btn-inactive{
+	filter: grayscale(100%);
+	pointer-events: none;
+}
 
 .danger-button{
 	color: white;

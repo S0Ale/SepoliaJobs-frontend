@@ -49,6 +49,7 @@ document.addEventListener('alpine:init', () => {
 			this.formattedAddr = shortenAddress(user.address)
 
 			await listJobs(true, true)
+			Alpine.store("loading", false)
 		}
 	}))
 
